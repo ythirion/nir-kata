@@ -8,9 +8,7 @@ import parse.dont.validate.NIRDomain.*
 import parse.dont.validate.NIRDomain.NIR.parseNIR
 
 object NIRProperties extends Properties("NIR") with EitherValues {
-  implicit def nirGenerator: Arbitrary[NIR] = validNIRGenerator
-
-  property("isomorphic") = forAll { (nir: NIR) =>
+  property("isomorphic") = forAll(validNIRGenerator) { nir =>
     parseNIR(nir.toString).value == nir
   }
 }

@@ -1,11 +1,12 @@
 package parse.dont.validate
 
 import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
 import org.scalacheck.Gen.{choose, frequency, oneOf}
 import parse.dont.validate.NIRDomain.*
 
 object Generators {
-  val validNIRGenerator: Arbitrary[NIR] =
+  val validNIRGenerator: Gen[NIR] =
     Arbitrary {
       for {
         sex <- oneOf(Sex.values)
@@ -25,5 +26,5 @@ object Generators {
         City(city),
         SerialNumber(serialNumber)
       )
-    }
+    }.arbitrary
 }

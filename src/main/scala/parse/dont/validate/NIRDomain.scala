@@ -167,6 +167,10 @@ object NIRDomain {
     def apply(key: Int): Key =
       if (key < 0 || key > 99) failure("invalid key")
       else key
+
+    extension (key: Key) {
+      def value: Int = key
+    }
   }
 
   private def rightOrFail[T](either: Either[ParsingError, T]): T =
