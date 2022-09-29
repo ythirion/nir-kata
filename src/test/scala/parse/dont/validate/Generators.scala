@@ -9,7 +9,7 @@ object Generators {
     Arbitrary {
       for {
         sex <- oneOf(Sex.values)
-        year <- choose(1, 99)
+        year <- choose(0, 99)
         month <- oneOf(Month.values)
         department <- frequency(
           (9, choose(1, 95)),

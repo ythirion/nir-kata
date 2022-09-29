@@ -11,7 +11,6 @@ object NIRProperties extends Properties("NIR") with EitherValues {
   implicit def nirGenerator: Arbitrary[NIR] = validNIRGenerator
 
   property("isomorphic") = forAll { (nir: NIR) =>
-    val s = nir.toString
-    parseNIR(s).value == nir
+    parseNIR(nir.toString).value == nir
   }
 }

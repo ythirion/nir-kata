@@ -59,7 +59,7 @@ object NIRDomain {
     private def parseSafely(input: String): Either[ParsingError, NIR] = {
       for {
         sex <- parseSex(input.charAt(0))
-        year <- readInt(input.substring(1).take(2))
+        year <- parseYear(input.substring(1).take(2))
         month <- parseMonth(input.substring(3).take(2))
         department <- parseDepartment(input.substring(5).take(2))
         city <- parseCity(input.substring(7).take(3))
@@ -88,7 +88,7 @@ object NIRDomain {
 
     def parseYear(input: String): Either[ParsingError, Year] =
       readInt(input) match {
-        case Right(x) if x > 0 && x < 100 => Right(x)
+        case Right(x) if x >= 0 && x < 100 => Right(x)
         case _ => Left("year should be gt 0 and lt 100")
       }
   }

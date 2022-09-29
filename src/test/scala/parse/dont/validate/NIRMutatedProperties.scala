@@ -32,7 +32,7 @@ object NIRMutatedProperties
   private val digits2Gen =
     frequency(
       (7, choose(100, 999)),
-      (3, choose(1, 9))
+      (3, choose(0, 9))
     )
 
   private val digits3Gen =
