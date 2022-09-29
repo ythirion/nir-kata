@@ -11,29 +11,38 @@ import parse.dont.validate.NIRDomain.{ParsingError, Sex, Year}
 import scala.language.strictEquality
 
 object NIRDomain {
-  class NIR private (
-      sex: Sex,
-      year: Year,
-      month: Month,
-      department: Department,
-      city: City,
-      serialNumber: SerialNumber
+  class NIR(
+      val sex: Sex,
+      val year: Year,
+      val month: Month,
+      val department: Department,
+      val city: City,
+      val serialNumber: SerialNumber
   ) {
-    override def toString: String = {
-      val sexValue = if (sex equals M) "1" else "2"
-      val monthValue = month.ordinal + 1
+    override def toString: String =
+      stringWithoutKey() + f"${calculateKey()}%02d"
 
-      sexValue
-        + year
-        + monthValue
-        + department
-        + city
-        + serialNumber
-    }
+    override def equals(other: Any): Boolean = other match
+      case otherNir: NIR =>
+        (sex equals otherNir.sex)
+        && year == otherNir.year
+        && (month equals otherNir.month)
+        && department == otherNir.department
+        && city == otherNir.city
+        && serialNumber == otherNir.serialNumber
+      case _ => false
 
-    private def long(): Long = toString.toLong
+    private def stringWithoutKey(): String =
+      sexToString
+        + f"$year%02d"
+        + f"${month.ordinal + 1}%02d"
+        + f"$department%02d"
+        + f"$city%03d"
+        + f"$serialNumber%03d"
 
-    def calculateKey(): Key = Key((97 - (long() % 97)).toInt)
+    private def sexToString: String = if (sex equals M) "1" else "2"
+
+    def calculateKey(): Key = Key((97 - (stringWithoutKey().toLong % 97)).toInt)
   }
 
   object NIR {
@@ -79,7 +88,7 @@ object NIRDomain {
 
     def parseYear(input: String): Either[ParsingError, Year] =
       readInt(input) match {
-        case Right(x) if x < 0 && x < 100 => Right(Year(x))
+        case Right(x) if x > 0 && x < 100 => Right(x)
         case _ => Left("year should be gt 0 and lt 100")
       }
   }
@@ -107,7 +116,7 @@ object NIRDomain {
   opaque type Department = Int
 
   object Department {
-    private val otherCountry: Department = Department(99)
+    private val otherCountry: Int = 99
 
     def apply(department: Int): Department = rightOrFail(
       parseDepartment(department.toString)
