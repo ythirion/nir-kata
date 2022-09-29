@@ -14,7 +14,7 @@ import parse.dont.validate.NIRDomain.NIR.parseNIR
 import primitive.obsession.NIR.validate
 
 object NIRProperties extends Properties("NIR") with EitherValues {
-  implicit def nirGenerator: Arbitrary[NIR] =
+  implicit def validNIRGenerator: Arbitrary[NIR] =
     Arbitrary {
       for {
         sex <- oneOf(Sex.values)
