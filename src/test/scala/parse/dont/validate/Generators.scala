@@ -5,7 +5,7 @@ import org.scalacheck.Gen.{choose, frequency, oneOf}
 import parse.dont.validate.NIRDomain.*
 
 object Generators {
-  def validNIRGenerator(): Arbitrary[NIR] =
+  val validNIRGenerator: Arbitrary[NIR] =
     Arbitrary {
       for {
         sex <- oneOf(Sex.values)

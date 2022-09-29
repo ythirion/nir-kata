@@ -110,7 +110,10 @@ object NIRDomain {
 
   object Month {
     def parseMonth(input: String): Either[ParsingError, Month] =
-      readInt(input).map(m => Month.fromOrdinal(m - 1))
+      readInt(input) match {
+        case Right(m) if m > 0 && m <= 12 => Right(Month.fromOrdinal(m - 1))
+        case _ => Left("Not a valid month")
+      }
   }
 
   opaque type Department = Int

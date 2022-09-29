@@ -5,9 +5,9 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.prop.Tables.Table
 import primitive.obsession.NIR._
-import primitive.obsession.ValidateNIRShould.{invalidNirs, validNirs}
+import primitive.obsession.ValidateNIR.{invalidNirs, validNirs}
 
-class ValidateNIRShould
+class ValidateNIR
     extends AnyFlatSpec
     with Matchers
     with TableDrivenPropertyChecks {
@@ -25,7 +25,7 @@ class ValidateNIRShould
   }
 }
 
-object ValidateNIRShould {
+object ValidateNIR {
   private val invalidNirs =
     Table(
       ("input", "reason"),
