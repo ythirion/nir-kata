@@ -11,9 +11,10 @@ import parse.dont.validate.NIRDomain.NIR.parseNIR
 object NIRMutatedProperties
     extends Properties("Mutated NIR")
     with OptionValues {
-  type mutator = NIR => (String, Gen[String])
 
-  def mutantGenerator: Gen[mutator] =
+  case class Mutator(name: String, func: NIR => Gen[String])
+
+  def mutantGenerator: Gen[Mutator] =
     oneOf(
       sexMutator,
       yearMutator,
@@ -25,68 +26,76 @@ object NIRMutatedProperties
       truncateMutator
     )
 
-  private val sexMutator: mutator = nir =>
-    (
+  private val sexMutator: Mutator =
+    Mutator(
       "sex mutator",
-      choose(3, 9)
-        .map(s => s + nir.toString.substring(1))
+      nir =>
+        choose(3, 9)
+          .map(s => s + nir.toString.substring(1))
     )
 
-  private val yearMutator: mutator = nir =>
-    (
+  private val yearMutator: Mutator =
+    Mutator(
       "year mutator",
-      digits2Gen.map(y => nir.toString.take(1) + y + nir.toString.substring(3))
+      nir =>
+        frequency(
+          (7, choose(100, 999)),
+          (3, choose(1, 9))
+        ).map(y => nir.toString.take(1) + y + nir.toString.substring(3))
     )
 
-  private val monthMutator: mutator = nir =>
-    (
+  private val monthMutator: Mutator =
+    Mutator(
       "month mutator",
-      choose(13, 99)
-        .map(m => nir.toString.take(3) + m + nir.toString.substring(5))
+      nir =>
+        choose(13, 99)
+          .map(m => nir.toString.take(3) + m + nir.toString.substring(5))
     )
 
-  private val departmentMutator: mutator = nir =>
-    (
+  private val departmentMutator: Mutator =
+    Mutator(
       "department mutator",
-      frequency(
-        (9, choose(100, 999)),
-        (1, choose(96, 98))
-      ).map(d => nir.toString.take(5) + d + nir.toString.substring(7))
+      nir =>
+        frequency(
+          (9, choose(100, 999)),
+          (1, choose(96, 98))
+        ).map(d => nir.toString.take(5) + d + nir.toString.substring(7))
     )
 
-  private val cityMutator: mutator = nir =>
-    (
+  private val cityMutator: Mutator =
+    Mutator(
       "city mutator",
-      digits3Gen.map(c => nir.toString.take(7) + c + nir.toString.substring(10))
+      nir =>
+        digits3Gen.map(c =>
+          nir.toString.take(7) + c + nir.toString.substring(10)
+        )
     )
 
-  private val serialNumberMutator: mutator = nir =>
-    (
+  private val serialNumberMutator: Mutator =
+    Mutator(
       "serial mutator",
-      digits3Gen.map(s =>
-        nir.toString.take(10) + s + nir.toString.substring(13)
-      )
+      nir =>
+        digits3Gen.map(s =>
+          nir.toString.take(10) + s + nir.toString.substring(13)
+        )
     )
 
-  private val keyMutator: mutator = nir =>
-    (
+  private val keyMutator: Mutator =
+    Mutator(
       "key mutator",
-      choose(0, 99)
-        .filter(key => key != nir.calculateKey().value)
-        .map(k => nir.toString.take(13) + k)
+      nir =>
+        oneOf(
+          (0 to 97)
+            .filter(x => x != nir.calculateKey().value)
+        ).map(k => nir.toString.take(13) + k)
     )
 
-  private val truncateMutator: mutator = nir =>
-    (
+  private val truncateMutator: Mutator =
+    Mutator(
       "truncate mutator",
-      choose(1, 14)
-        .map(size => nir.toString.take(size))
-    )
-
-  private val digits2Gen =
-    frequency(
-      (7, choose(100, 999)),
-      (3, choose(1, 9))
+      nir =>
+        choose(1, 14)
+          .map(size => nir.toString.take(size))
     )
 
   private val digits3Gen =
@@ -98,16 +107,11 @@ object NIRMutatedProperties
   property("can never be parsed") = forAll(validNIRGenerator, mutantGenerator) {
     (nir, mutator) =>
       {
-        classify(true, mutator(nir)._1) {
-          mutator(nir)._2.sample match {
-            case Some(m) => parseNIR(m).isLeft
-            case _ => false
-          }
+        classify(true, mutator.name) {
+          parseNIR(
+            mutator.func(nir).sample.value
+          ).isLeft
         }
       }
   }
-
-  // TODO investigate:  failing seed for Mutated NIR.can never be parsed is u-cD4nAzvmsenpbtzB4W9BOGUlPtRngbfuzONB1t97I=
-  // [info] > ARG_0: 246012405219215
-  // [info] > ARG_1: parse.dont.validate.NIRMutatedProperties$$$Lambda$15116/0x0000000802ffafd0@64a07a1e
 }
