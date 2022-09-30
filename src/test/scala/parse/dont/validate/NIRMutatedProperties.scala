@@ -4,7 +4,7 @@ import org.scalacheck.Gen.*
 import org.scalacheck.Prop.{classify, collect, falsified, forAll}
 import org.scalacheck.{Arbitrary, Gen, Properties}
 import org.scalatest.OptionValues
-import parse.dont.validate.Generators.validNIRGenerator
+import parse.dont.validate.Generators.validNIR
 import parse.dont.validate.NIRDomain.*
 import parse.dont.validate.NIRDomain.NIR.parseNIR
 
@@ -12,9 +12,11 @@ object NIRMutatedProperties
     extends Properties("Mutated NIR")
     with OptionValues {
 
-  case class Mutator(name: String, func: NIR => Gen[String])
+  private case class Mutator(name: String, func: NIR => Gen[String]) {
+    def mutate(nir: NIR): String = func(nir).sample.value
+  }
 
-  def mutantGenerator: Gen[Mutator] =
+  private def mutantGenerator: Gen[Mutator] =
     oneOf(
       sexMutator,
       yearMutator,
@@ -104,13 +106,11 @@ object NIRMutatedProperties
       (3, choose(1, 99))
     )
 
-  property("can never be parsed") = forAll(validNIRGenerator, mutantGenerator) {
+  property("can never be parsed") = forAll(validNIR, mutantGenerator) {
     (nir, mutator) =>
       {
         classify(true, mutator.name) {
-          parseNIR(
-            mutator.func(nir).sample.value
-          ).isLeft
+          parseNIR(mutator.mutate(nir)).isLeft
         }
       }
   }

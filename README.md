@@ -1,9 +1,9 @@
 ## NIR kata
-- Write a parser of `NIR` (simplified rules)
+- Write a parser of `NIR` (simplified rules explained below)
 - You must respect ["parse don't validate"](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/) principle
 - Your parsing function must respect the below property
 ```scala
-  property("isomorphic") = forAll { (nir: NIR) =>
+  property("isomorphic") = forAll(validNIR) { nir =>
     parseNIR(nir.toString).value == nir
   }
 ```
