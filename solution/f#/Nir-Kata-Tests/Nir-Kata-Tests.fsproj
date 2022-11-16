@@ -9,7 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="NIRTests.fs" />
+        <Compile Include="Primitive.Obsession\NIRTests.fs" />
+        <Compile Include="main.fs" />
     </ItemGroup>
 
     <ItemGroup>
