@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <Compile Include="Primitive.Obsession\NIR.fs" />
+        <Compile Include="Parse.Dont.Validate\NIRDomain.fs" />
     </ItemGroup>
 
 </Project>

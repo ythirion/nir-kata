@@ -10,10 +10,12 @@
 
     <ItemGroup>
         <Compile Include="Primitive.Obsession\NIRTests.fs" />
+        <Compile Include="Parse.Dont.Validate\NIRProperties.fs" />
         <Compile Include="main.fs" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="FsCheck.Xunit" Version="2.16.5" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
