@@ -9,6 +9,7 @@
     <ItemGroup>
         <Compile Include="Primitive.Obsession\NIR.fs" />
         <Compile Include="Parse.Dont.Validate\Common.fs" />
+        <Compile Include="Parse.Dont.Validate\Sex.fs" />
         <Compile Include="Parse.Dont.Validate\Year.fs" />
         <Compile Include="Parse.Dont.Validate\Month.fs" />
         <Compile Include="Parse.Dont.Validate\Department.fs" />

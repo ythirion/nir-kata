@@ -7,39 +7,33 @@ module NIRDomain =
     let private toError message = Error(ErrorMessage message)
     let private validNIRLength = 15
 
-    type Sex =
-        private
-        | M
-        | F
-
     type Key = private Key of int
 
     type NIR =
         private
-            { sex: Sex
+            { sex: Sex.Sex
               year: Year.Year
               month: Month.Month
               department: Department.Department
               city: City.City
               serialNumber: SerialNumber.SerialNumber }
         override this.ToString() : string =
-            $"{this.sex}{this.year}{this.month}{this.department}{this.city}{this.serialNumber}"
+            (Sex.value this.sex).ToString()
+            + $"%02i{Year.value this.year}"
+            + $"%02i{Month.value this.month}"
+            + $"%02i{Department.value this.department}"
+            + $"%03i{City.value this.city}"
+            + $"%03i{SerialNumber.value this.serialNumber}"
 
     let private calculateKey (nir: NIR) : Option<Key> =
         match Common.parseToLong (nir.ToString()) with
         | Some n -> 97L - (n % 97L) |> int |> Key |> Some
         | None -> None
 
-    let private parseSex input : Option<Sex> =
-        match input with
-        | '1' -> Some M
-        | '2' -> Some F
-        | _ -> None
-
     let private validateKey (nir: NIR, key: int) = calculateKey nir = Some(Key key)
 
     let private parseSafely (input: string) : Result<NIR, ErrorMessage> =
-        match parseSex input.[0],
+        match Sex.parse input.[0],
               Year.parse input.[1..2],
               Month.parse input.[3..4],
               Department.parse input.[5..6],
