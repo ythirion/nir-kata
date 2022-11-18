@@ -11,6 +11,9 @@
         <Compile Include="Parse.Dont.Validate\Common.fs" />
         <Compile Include="Parse.Dont.Validate\Year.fs" />
         <Compile Include="Parse.Dont.Validate\Month.fs" />
+        <Compile Include="Parse.Dont.Validate\Department.fs" />
+        <Compile Include="Parse.Dont.Validate\City.fs" />
+        <Compile Include="Parse.Dont.Validate\SerialNumber.fs" />
         <Compile Include="Parse.Dont.Validate\NIRDomain.fs" />
     </ItemGroup>
 

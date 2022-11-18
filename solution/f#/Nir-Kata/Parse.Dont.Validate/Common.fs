@@ -8,3 +8,9 @@ module Common =
             potentialInt |> int |> Some
         with
         | :? FormatException -> None
+
+    let parseToLong (potentialLong: string) =
+        try
+            potentialLong |> int64 |> Some
+        with
+        | :? FormatException -> None

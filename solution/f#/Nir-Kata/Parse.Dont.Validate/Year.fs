@@ -2,7 +2,7 @@ namespace Nir_Kata.Parse.Dont.Validate.NIRDomain
 
 
 module Year =
-    type Year = Year of int
+    type Year = private Year of int
 
     let parse (potentialYear: string) =
         match Common.parseToInt potentialYear with
