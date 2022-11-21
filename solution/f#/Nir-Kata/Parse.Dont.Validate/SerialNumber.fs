@@ -2,7 +2,7 @@ namespace Nir_Kata.Parse.Dont.Validate.NIRDomain
 
 
 module SerialNumber =
-    type SerialNumber = private SerialNumber of int
+    type SerialNumber = SerialNumber of int
 
     let parse (potentialSerialNumber: string) =
         match Common.parseToInt potentialSerialNumber with

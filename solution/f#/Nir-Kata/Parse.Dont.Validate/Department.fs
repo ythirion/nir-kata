@@ -2,7 +2,7 @@ namespace Nir_Kata.Parse.Dont.Validate.NIRDomain
 
 
 module Department =
-    type Department = private Department of int
+    type Department = Department of int
 
     let inRange department =
         department > 0 && department <= 96
