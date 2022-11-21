@@ -10,7 +10,9 @@
 
     <ItemGroup>
         <Compile Include="Primitive.Obsession\NIRTests.fs" />
+        <Compile Include="Parse.Dont.Validate\NIRGenerator.fs" />
         <Compile Include="Parse.Dont.Validate\NIRProperties.fs" />
+        <Compile Include="Parse.Dont.Validate\NIRMutatedProperties.fs" />
         <Compile Include="main.fs" />
     </ItemGroup>
 

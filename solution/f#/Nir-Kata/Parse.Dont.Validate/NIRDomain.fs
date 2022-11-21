@@ -1,7 +1,13 @@
 namespace Nir_Kata.Parse.Dont.Validate.NIRDomain
 
 open Microsoft.FSharp.Core
+open Nir_Kata.Parse.Dont.Validate.NIRDomain.City
+open Nir_Kata.Parse.Dont.Validate.NIRDomain.Department
 open Nir_Kata.Parse.Dont.Validate.NIRDomain.Key
+open Nir_Kata.Parse.Dont.Validate.NIRDomain.Month
+open Nir_Kata.Parse.Dont.Validate.NIRDomain.SerialNumber
+open Nir_Kata.Parse.Dont.Validate.NIRDomain.Sex
+open Nir_Kata.Parse.Dont.Validate.NIRDomain.Year
 
 module NIRDomain =
     type ErrorMessage = ErrorMessage of string
@@ -9,12 +15,12 @@ module NIRDomain =
     let private validNIRLength = 15
 
     type NIR =
-        { sex: Sex.Sex
-          year: Year.Year
-          month: Month.Month
-          department: Department.Department
-          city: City.City
-          serialNumber: SerialNumber.SerialNumber }
+        { sex: Sex
+          year: Year
+          month: Month
+          department: Department
+          city: City
+          serialNumber: SerialNumber }
         member private this.toStringWithoutKey: string =
             (Sex.value this.sex).ToString()
             + $"%02i{Year.value this.year}"
@@ -30,7 +36,7 @@ module NIRDomain =
 
         member private this.key =
             match this.calculateKey with
-            | Some key -> $"%02i{value key}"
+            | Some key -> $"%02i{Key.value key}"
             | _ -> ""
 
         override this.ToString() : string = this.toStringWithoutKey + this.key
