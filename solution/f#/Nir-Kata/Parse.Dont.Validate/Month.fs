@@ -2,7 +2,7 @@ namespace Nir_Kata.Parse.Dont.Validate.NIRDomain
 
 
 module Month =
-    type Month = private Month of int
+    type Month = Month of int
 
     let parse (potentialMonth: string) =
         match Common.parseToInt potentialMonth with

@@ -1,23 +1,21 @@
 namespace Nir_Kata.Parse.Dont.Validate.NIRDomain
 
 open Microsoft.FSharp.Core
+open Nir_Kata.Parse.Dont.Validate.NIRDomain.Key
 
 module NIRDomain =
     type ErrorMessage = ErrorMessage of string
     let private toError message = Error(ErrorMessage message)
     let private validNIRLength = 15
 
-    type Key = private Key of int
-
     type NIR =
-        private
-            { sex: Sex.Sex
-              year: Year.Year
-              month: Month.Month
-              department: Department.Department
-              city: City.City
-              serialNumber: SerialNumber.SerialNumber }
-        override this.ToString() : string =
+        { sex: Sex.Sex
+          year: Year.Year
+          month: Month.Month
+          department: Department.Department
+          city: City.City
+          serialNumber: SerialNumber.SerialNumber }
+        member private this.toStringWithoutKey: string =
             (Sex.value this.sex).ToString()
             + $"%02i{Year.value this.year}"
             + $"%02i{Month.value this.month}"
@@ -25,12 +23,25 @@ module NIRDomain =
             + $"%03i{City.value this.city}"
             + $"%03i{SerialNumber.value this.serialNumber}"
 
-    let private calculateKey (nir: NIR) : Option<Key> =
-        match Common.parseToLong (nir.ToString()) with
-        | Some n -> 97L - (n % 97L) |> int |> Key |> Some
-        | None -> None
+        member this.calculateKey: Option<Key> =
+            match this.toStringWithoutKey |> Common.parseToLong with
+            | Some n -> 97L - (n % 97L) |> int |> Key |> Some
+            | None -> None
 
-    let private validateKey (nir: NIR, key: int) = calculateKey nir = Some(Key key)
+        member private this.key =
+            match this.calculateKey with
+            | Some key -> $"%02i{value key}"
+            | _ -> ""
+
+        override this.ToString() : string = this.toStringWithoutKey + this.key
+
+    let private validateKey (nir: NIR, key: int) = nir.calculateKey = Some(Key key)
+
+    let private toNIR (nir: NIR, key: int) =
+        if (nir, key) |> validateKey then
+            Ok(nir)
+        else
+            toError "Invalid key"
 
     let private parseSafely (input: string) : Result<NIR, ErrorMessage> =
         match Sex.parse input.[0],
@@ -50,11 +61,7 @@ module NIRDomain =
                   city = city
                   serialNumber = serialNumber }
 
-            if (validateKey (nir, key)) then
-                Ok(nir)
-            else
-                toError $"Invalid key for: {input}"
-
+            (nir, key) |> toNIR
         | _ -> toError $"Not a valid NIR: {input}"
 
     let parseNIR (input: string) : Result<NIR, ErrorMessage> =
