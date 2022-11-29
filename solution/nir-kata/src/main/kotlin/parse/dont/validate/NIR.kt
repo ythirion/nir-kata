@@ -5,9 +5,6 @@ import parse.dont.validate.NIR.Year.Parser.parseYear
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 
-private fun String.validateNumber(isValid: (Long) -> Boolean): Boolean =
-    this.toLongOrNull()?.let { isValid(it) } == true
-
 data class NIR(
     val sex: Sex,
     val year: Year

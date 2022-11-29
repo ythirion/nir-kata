@@ -18,7 +18,7 @@ class NIRProperties : StringSpec({
 
     "Nir round tripping" {
         forAll(nirGenerator) { validNIR ->
-            parseNIR(validNIR.toString()) == validNIR
+            parseNIR(validNIR.toString()).getOrNull() == validNIR
         }
     }
 })
