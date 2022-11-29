@@ -35,3 +35,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 TestResults/
+
+# Kotlin
+.gradle
+build/
+gradle/
