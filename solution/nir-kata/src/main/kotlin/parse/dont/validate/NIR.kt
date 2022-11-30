@@ -5,6 +5,14 @@ import parse.dont.validate.NIR.Year.Parser.parseYear
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 
+private fun <T> String.parseOrNull(
+    isValid: (Int) -> Boolean,
+    factory: (Int) -> T
+): T? =
+    this.toIntOrNull()?.let {
+        return if (isValid(it)) factory(it) else null
+    }
+
 data class NIR(
     val sex: Sex,
     val year: Year,
@@ -42,12 +50,7 @@ data class NIR(
 
         companion object Parser {
             private fun Int.isValid() = this in 0..99
-
-            fun parseYear(input: String): Year? =
-                when (input.toIntOrNull()?.isValid()) {
-                    true -> Year(input.toInt())
-                    else -> null
-                }
+            fun parseYear(input: String): Year? = input.parseOrNull({ it.isValid() }, ::Year)
         }
     }
 
@@ -76,12 +79,7 @@ data class NIR(
 
         companion object Parser {
             private fun Int.isValid() = this in 1..95 || this == 99
-
-            fun parseDepartment(input: String): Department? =
-                when (input.toIntOrNull()?.isValid()) {
-                    true -> Department(input.toInt())
-                    else -> null
-                }
+            fun parseDepartment(input: String): Department? = input.parseOrNull({ it.isValid() }, ::Department)
         }
     }
 
@@ -96,11 +94,7 @@ data class NIR(
         companion object Parser {
             private fun Int.isValid() = this in 1..999
 
-            fun parseCity(input: String): City? =
-                when (input.toIntOrNull()?.isValid()) {
-                    true -> City(input.toInt())
-                    else -> null
-                }
+            fun parseCity(input: String): City? = input.parseOrNull({ it.isValid() }, ::City)
         }
     }
 
@@ -115,11 +109,7 @@ data class NIR(
         companion object Parser {
             private fun Int.isValid() = this in 1..999
 
-            fun parseSerialNumber(input: String): SerialNumber? =
-                when (input.toIntOrNull()?.isValid()) {
-                    true -> SerialNumber(input.toInt())
-                    else -> null
-                }
+            fun parseSerialNumber(input: String): SerialNumber? = input.parseOrNull({ it.isValid() }, ::SerialNumber)
         }
     }
 
