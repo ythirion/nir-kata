@@ -5,17 +5,15 @@ import parse.dont.validate.NIR.Year.Parser.parseYear
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 
+fun NIR.Sex.toInt(): Int = if (this == NIR.Sex.M) 1 else 2
+
 data class NIR(
     val sex: Sex,
     val year: Year
 ) {
-    override fun toString(): String {
-        return toStringWithoutKey() + calculateKey()
-    }
-
-    private fun toStringWithoutKey(): String = sexToString() + year
-    private fun sexToString(): String = if (sex == Sex.M) "1" else "2"
-    private fun calculateKey(): String = (97 - (toStringWithoutKey().toLong() % 97)).toString()
+    override fun toString(): String = toLong().toString() + calculateKey()
+    private fun toLong(): Long = (sex.toInt().toString() + year).toLong()
+    private fun calculateKey(): Long = 97 - (toLong() % 97)
 
     enum class Sex {
         M, F;

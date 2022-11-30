@@ -89,7 +89,7 @@ object NIRDomain {
     def parseYear(input: String): Either[ParsingError, Year] =
       readInt(input) match {
         case Right(x) if x >= 0 && x < 100 => Right(x)
-        case _ => Left("year should be gt 0 and lt 100")
+        case _ => Left("year should be between 0 and 99")
       }
   }
 

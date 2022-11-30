@@ -8,7 +8,7 @@ import parse.dont.validate.NIRDomain.*
 import parse.dont.validate.NIRDomain.NIR.parseNIR
 
 object NIRProperties extends Properties("NIR") with EitherValues {
-  property("isomorphic") = forAll(validNIR) { nir =>
+  property("round tripping") = forAll(validNIR) { nir =>
     parseNIR(nir.toString).value == nir
   }
 }

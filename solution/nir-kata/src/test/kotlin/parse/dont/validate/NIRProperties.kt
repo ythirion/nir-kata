@@ -12,7 +12,7 @@ class NIRProperties : StringSpec({
     val nirGenerator = arbitrary { _ ->
         NIR(
             sex = Arb.enum<NIR.Sex>().bind(),
-            year = NIR.Year(Arb.long(0, 100).bind())
+            year = NIR.Year(Arb.long(0, 99).bind())
         )
     }
 
