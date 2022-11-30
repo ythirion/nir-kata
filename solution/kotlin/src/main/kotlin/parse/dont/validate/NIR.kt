@@ -21,9 +21,9 @@ data class NIR(
     val city: City,
     val serialNumber: SerialNumber
 ) {
-    override fun toString(): String = toLong().toString() + String.format("%02d", calculateKey())
+    override fun toString(): String = toLong().toString() + String.format("%02d", key())
     private fun toLong(): Long = (sex.toString() + year + month + department + city + serialNumber).toLong()
-    private fun calculateKey(): Int = (97 - (toLong() % 97)).toInt()
+    fun key(): Int = (97 - (toLong() % 97)).toInt()
 
     enum class Sex {
         M, F;
@@ -120,21 +120,25 @@ data class NIR(
             if (input.length != validLength) failure(ParsingException("Not a valid NIR: should have a length of $validLength"))
             else parseSafely(input)
 
+        private fun NIR.checkKey(input: String): Boolean =
+            input.substring(13)
+                .toIntOrNull()
+                .let { return this.key() == it }
+
         private fun parseSafely(input: String): Result<NIR> {
-            return success(
-                NIR(
-                    sex = parseSex(input[0]) ?: return "Not a valid sex".toFailure(),
-                    year = parseYear(input.substring(1).take(2))
-                        ?: return "Year should be positive and lt 100".toFailure(),
-                    month = Month.parseMonth(input.substring(3).take(2)) ?: return "Not a valid month".toFailure(),
-                    department = Department.parseDepartment(input.substring(5).take(2))
-                        ?: return "Department should be gt 0 and lt 96 or equal to 99".toFailure(),
-                    city = City.parseCity(input.substring(7).take(3))
-                        ?: return "City should be gt 0 and lt 1000".toFailure(),
-                    serialNumber = SerialNumber.parseSerialNumber(input.substring(10).take(3))
-                        ?: return "Serial number should be gt 0 and lt 1000".toFailure()
-                )
+            val nir = NIR(
+                sex = parseSex(input[0]) ?: return "Not a valid sex".toFailure(),
+                year = parseYear(input.substring(1).take(2))
+                    ?: return "Year should be positive and lt 100".toFailure(),
+                month = Month.parseMonth(input.substring(3).take(2)) ?: return "Not a valid month".toFailure(),
+                department = Department.parseDepartment(input.substring(5).take(2))
+                    ?: return "Department should be gt 0 and lt 96 or equal to 99".toFailure(),
+                city = City.parseCity(input.substring(7).take(3))
+                    ?: return "City should be gt 0 and lt 1000".toFailure(),
+                serialNumber = SerialNumber.parseSerialNumber(input.substring(10).take(3))
+                    ?: return "Serial number should be gt 0 and lt 1000".toFailure()
             )
+            return if (nir.checkKey(input)) success(nir) else "".toFailure()
         }
 
         private fun String.toFailure(): Result<NIR> = failure(ParsingException(this))
