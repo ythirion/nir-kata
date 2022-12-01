@@ -1,10 +1,7 @@
 package parse.dont.validate
 
 import io.kotest.property.Arb
-import io.kotest.property.arbitrary.arbitrary
-import io.kotest.property.arbitrary.enum
-import io.kotest.property.arbitrary.frequency
-import io.kotest.property.arbitrary.int
+import io.kotest.property.arbitrary.*
 import parse.dont.validate.NIR.*
 
 object Generators {

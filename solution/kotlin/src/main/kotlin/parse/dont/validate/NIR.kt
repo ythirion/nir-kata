@@ -8,10 +8,10 @@ import kotlin.Result.Companion.success
 private fun <T> String.parseOrNull(
     isValid: (Int) -> Boolean,
     factory: (Int) -> T
-): T? =
-    this.toIntOrNull()?.let {
-        return if (isValid(it)) factory(it) else null
-    }
+): T? = this.toIntOrNull()?.let { if (isValid(it)) factory(it) else null }
+
+private fun Int.toString2(): String = String.format("%02d", this)
+private fun Int.toString3(): String = String.format("%03d", this)
 
 data class NIR(
     val sex: Sex,
@@ -21,7 +21,7 @@ data class NIR(
     val city: City,
     val serialNumber: SerialNumber
 ) {
-    override fun toString(): String = toLong().toString() + String.format("%02d", key())
+    override fun toString(): String = toLong().toString() + key().toString2()
     private fun toLong(): Long = (sex.toString() + year + month + department + city + serialNumber).toLong()
     fun key(): Int = (97 - (toLong() % 97)).toInt()
 
@@ -46,7 +46,7 @@ data class NIR(
             require(value.isValid())
         }
 
-        override fun toString(): String = String.format("%02d", value)
+        override fun toString(): String = value.toString2()
 
         companion object Parser {
             private fun Int.isValid() = this in 0..99
@@ -57,7 +57,7 @@ data class NIR(
     enum class Month {
         Jan, Feb, Mar, Apr, May, Jun, Jul, Aou, Sep, Oct, Nov, Dec;
 
-        override fun toString(): String = String.format("%02d", this.ordinal + 1)
+        override fun toString(): String = (this.ordinal + 1).toString2()
 
         companion object Parser {
             fun parseMonth(input: String): Month? =
@@ -75,7 +75,7 @@ data class NIR(
             require(value.isValid())
         }
 
-        override fun toString(): String = String.format("%02d", value)
+        override fun toString(): String = value.toString2()
 
         companion object Parser {
             private fun Int.isValid() = this in 1..95 || this == 99
@@ -89,7 +89,7 @@ data class NIR(
             require(value.isValid())
         }
 
-        override fun toString(): String = String.format("%03d", value)
+        override fun toString(): String = value.toString3()
 
         companion object Parser {
             private fun Int.isValid() = this in 1..999
@@ -104,7 +104,7 @@ data class NIR(
             require(value.isValid())
         }
 
-        override fun toString(): String = String.format("%03d", value)
+        override fun toString(): String = value.toString3()
 
         companion object Parser {
             private fun Int.isValid() = this in 1..999
