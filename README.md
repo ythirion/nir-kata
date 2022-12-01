@@ -3,8 +3,8 @@
 - You must apply ["parse don't validate"](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/) principle
 - Your `parsing function` must respect the below property
 ```text
-for all (nir)
-parseNIR nir.toString == nir
+for all (validNir)
+parseNIR(nir.toString) == nir
 ```
 
 in other words with `scalacheck`:
@@ -16,7 +16,8 @@ property("isomorphic") = forAll(validNIR) { nir =>
 ```
 
 With `parse don't validate` we want to make it impossible to represent an invalid `NIR` in our system:
-- Use `scala 3` [opaque types](https://docs.scala-lang.org/scala3/book/types-opaque-types.html)
+
+- You can use `scala 3` [opaque types](https://docs.scala-lang.org/scala3/book/types-opaque-types.html)
 - Use "Property-Based Testing" with `scalacheck` to drive your implementation
 
 Your parser may look like this: `String -> Either[ParsingError, NIR]`
@@ -85,6 +86,9 @@ Some example of mutations:
 ![Mutation-based Property-Driven Development](img/mutation-based-property-driven-development.png)
 
 Read more about it [here](https://abailly.github.io/posts/mutation-testing.html)
+
+## "Solution"
+Proposal of solution are available in `scala 3`, `F#` and `kotlin` in the `solution` directory.
 
 ## Resources
 - [NIR full specification](https://fr.wikipedia.org/wiki/Num%C3%A9ro_de_s%C3%A9curit%C3%A9_sociale_en_France)
