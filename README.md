@@ -88,7 +88,11 @@ Some example of mutations:
 Read more about it [here](https://abailly.github.io/posts/mutation-testing.html)
 
 ## "Solution"
-Proposal of solution are available in `scala 3`, `F#` and `kotlin` in the `solution` directory.
+Proposal of solution are available in the `solution` directory:
+
+- `scala 3` with `scalatest` | `scalacheck` 
+- `F#` with `xUnit` | `FsCheck`
+- `kotlin` with `kotest`
 
 ## Resources
 - [NIR full specification](https://fr.wikipedia.org/wiki/Num%C3%A9ro_de_s%C3%A9curit%C3%A9_sociale_en_France)
