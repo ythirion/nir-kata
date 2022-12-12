@@ -5,7 +5,7 @@ namespace Nir_Kata
     public static class Extensions
     {
         public static Option<int> ToInt(this string potentialNumber) =>
-            Int32.TryParse(potentialNumber, out var number)
+            int.TryParse(potentialNumber, out var number)
                 ? number
                 : Option<int>.None;
 
