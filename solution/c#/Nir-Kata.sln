@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nir-Kata", "Nir-Kata\Nir-Kata.csproj", "{34D7CA18-B761-4CE7-809D-ED72FB525DA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nir-Kata-Tests", "Nir-Kata-Tests\Nir-Kata-Tests.csproj", "{562E2626-7D7A-48D0-B8B5-C8CD7CFEB20F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{34D7CA18-B761-4CE7-809D-ED72FB525DA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34D7CA18-B761-4CE7-809D-ED72FB525DA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34D7CA18-B761-4CE7-809D-ED72FB525DA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34D7CA18-B761-4CE7-809D-ED72FB525DA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{562E2626-7D7A-48D0-B8B5-C8CD7CFEB20F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{562E2626-7D7A-48D0-B8B5-C8CD7CFEB20F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{562E2626-7D7A-48D0-B8B5-C8CD7CFEB20F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{562E2626-7D7A-48D0-B8B5-C8CD7CFEB20F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
