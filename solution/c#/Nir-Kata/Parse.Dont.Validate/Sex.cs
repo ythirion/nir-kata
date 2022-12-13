@@ -10,7 +10,7 @@ public enum Sex
 
 public static class SexParser
 {
-    public static Option<Sex> ParseSex(char potentialSex) =>
+    public static Option<Sex> Parse(char potentialSex) =>
         potentialSex switch
         {
             '1' => Sex.M,
