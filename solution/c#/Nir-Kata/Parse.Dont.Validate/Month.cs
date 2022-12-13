@@ -25,5 +25,10 @@ public static class MonthParser
             .ToInt()
             .Match(x => FromInt(x), Option<Month>.None);
 
-    private static Month FromInt(int x) => (Month) Enum.GetValues<Month>().GetValue(x)!;
+    private static Month FromInt(int x) => (Month) Enum.GetValues<Month>().GetValue(x - 1)!;
+}
+
+public static class MonthExtensions
+{
+    public static string ToIntString(this Month month) => ((int) month).ToString("D2");
 }

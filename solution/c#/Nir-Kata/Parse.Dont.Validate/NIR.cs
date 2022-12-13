@@ -1,4 +1,5 @@
 using LanguageExt;
+using LanguageExt.UnsafeValueAccess;
 
 namespace Nir_Kata.Parse.Dont.Validate;
 
@@ -28,15 +29,27 @@ public readonly struct NIR
             ? ParseSafely(input)
             : Option<NIR>.None;
 
-    private static Option<NIR> ParseSafely(string input) =>
-        from sex in SexParser.Parse(input[0])
-        from year in Year.Parse(input[1..3])
-        from month in MonthParser.Parse(input[3..5])
-        from department in Department.Parse(input[5..7])
-        from city in City.Parse(input[7..10])
-        from serialNumber in SerialNumber.Parse(input[10..13])
-        select new NIR(sex, year, month, department, city, serialNumber);
+    private static bool ValidateKey(NIR nir, int key) => nir.Key() == key;
 
-    public override string ToString() =>
-        _sex.ToString("D") + _year + _month.ToString("D") + _department + _city + _serialNumber;
+    private int Key() => (int) (97L - ToStringWithoutKey().ToLong().Value() % 97L);
+
+    private static Option<NIR> ParseSafely(string input) =>
+        (from sex in SexParser.Parse(input[0])
+            from year in Year.Parse(input[1..3])
+            from month in MonthParser.Parse(input[3..5])
+            from department in Department.Parse(input[5..7])
+            from city in City.Parse(input[7..10])
+            from serialNumber in SerialNumber.Parse(input[10..13])
+            from key in input[13..15].ToInt()
+            select new {NIR = new NIR(sex, year, month, department, city, serialNumber), Key = key})
+        .Match(parsedNIR =>
+                ValidateKey(parsedNIR.NIR, parsedNIR.Key)
+                    ? parsedNIR.NIR
+                    : Option<NIR>.None,
+            Option<NIR>.None);
+
+    public override string ToString() => ToStringWithoutKey() + Key().ToString("D2");
+
+    private string ToStringWithoutKey() =>
+        _sex.ToString("D") + _year + _month.ToIntString() + _department + _city + _serialNumber;
 }

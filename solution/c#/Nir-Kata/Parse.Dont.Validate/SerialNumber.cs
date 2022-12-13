@@ -18,5 +18,5 @@ public class SerialNumber
             .ToInt()
             .Match(x => new SerialNumber(x), Option<SerialNumber>.None);
 
-    public override string ToString() => _value.ToString("D2");
+    public override string ToString() => _value.ToString("D3");
 }

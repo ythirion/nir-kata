@@ -17,5 +17,5 @@ public readonly struct City
         Parse(value.ToString())
             .Match(y => y, () => throw new InvalidCastException());
 
-    public override string ToString() => _value.ToString("D2");
+    public override string ToString() => _value.ToString("D3");
 }
