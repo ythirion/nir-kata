@@ -1,9 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions.LanguageExt;
 using FsCheck;
 using FsCheck.Xunit;
+using LanguageExt;
 using Nir_Kata.Parse.Dont.Validate;
 using static System.Tuple;
+using static Nir_Kata.Parse.Dont.Validate.NIR;
 
 namespace Nir_Kata_Tests.Parse.Dont.Validate;
 
@@ -75,8 +76,8 @@ public class NIRMutatedProperties
     }
 
     [Property(Arbitrary = new[] {typeof(NIRGenerator), typeof(MutatorGenerator)})]
-    public void InvalidNIRCanNeverBeParsed(NIR nir, Mutator mutator) =>
-        NIR.ParseNIR(mutator.Apply(nir))
-            .Should()
-            .BeNone();
+    public Property InvalidNIRCanNeverBeParsed(NIR nir, Mutator mutator) =>
+        (ParseNIR(mutator.Apply(nir)) == Option<NIR>.None)
+        .ToProperty()
+        .Classify(true, mutator.Name);
 }
