@@ -6,7 +6,7 @@ module City =
 
     let parse (potentialCity: string) =
         match Common.parseToInt potentialCity with
-        | Some city -> Some(City city)
+        | Some city when city >= 1 && city <= 999 -> Some(City city)
         | _ -> None
 
     let apply f (City city) = f city

@@ -6,7 +6,7 @@ module Year =
 
     let parse (potentialYear: string) =
         match Common.parseToInt potentialYear with
-        | Some year -> Some(Year year)
+        | Some year when year >= 0 && year <= 99 -> Some(Year year)
         | _ -> None
 
     let apply f (Year year) = f year

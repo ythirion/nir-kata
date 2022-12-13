@@ -42,13 +42,8 @@ public class NIRMutatedProperties
     }
 
     [Property(Arbitrary = new[] {typeof(NIRGenerator), typeof(MutatorGenerator)})]
-    public void InvalidNIRCanNeverBeParsed(NIR nir, Mutator mutator)
-    {
-        var mutatedNIR = mutator.Apply(nir);
-        Console.WriteLine(mutatedNIR);
-
-        NIR.ParseNIR(mutatedNIR)
+    public void InvalidNIRCanNeverBeParsed(NIR nir, Mutator mutator) =>
+        NIR.ParseNIR(mutator.Apply(nir))
             .Should()
             .BeNone();
-    }
 }

@@ -6,7 +6,7 @@ module SerialNumber =
 
     let parse (potentialSerialNumber: string) =
         match Common.parseToInt potentialSerialNumber with
-        | Some number -> Some(SerialNumber number)
+        | Some number when number >=1 && number <= 999 -> Some(SerialNumber number)
         | _ -> None
 
     let apply f (SerialNumber number) = f number
