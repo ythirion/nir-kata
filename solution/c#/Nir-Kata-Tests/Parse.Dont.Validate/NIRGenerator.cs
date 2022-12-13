@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FsCheck;
 using Nir_Kata.Parse.Dont.Validate;
 using static System.Tuple;
@@ -6,6 +7,7 @@ namespace Nir_Kata_Tests.Parse.Dont.Validate;
 
 public static class NIRGenerator
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Local", Justification = "Used by FSCheck")]
     public static Arbitrary<NIR> Nir() =>
         (from sex in Arb.Generate<Sex>()
             from year in Gen.Choose(0, 99)

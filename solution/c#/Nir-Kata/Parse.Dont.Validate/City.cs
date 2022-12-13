@@ -11,6 +11,7 @@ public readonly struct City
     public static Option<City> Parse(string potentialCity) =>
         potentialCity
             .ToInt()
+            .Filter(x => x is > 0 and <= 999)
             .Match(x => new City(x), Option<City>.None);
 
     public static explicit operator City(int value) =>

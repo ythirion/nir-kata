@@ -15,6 +15,7 @@ public readonly struct Department
     public static Option<Department> Parse(string potentialDepartment) =>
         potentialDepartment
             .ToInt()
+            .Filter(x => x is > 0 and <= 95 or 99)
             .Match(x => new Department(x), Option<Department>.None);
 
     public override string ToString() => _value.ToString("D2");

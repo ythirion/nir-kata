@@ -15,6 +15,7 @@ public readonly struct Year
     public static Option<Year> Parse(string potentialYear) =>
         potentialYear
             .ToInt()
+            .Filter(x => x is >= 0 and <= 99)
             .Match(x => new Year(x), Option<Year>.None);
 
     public override string ToString() => _value.ToString("D2");

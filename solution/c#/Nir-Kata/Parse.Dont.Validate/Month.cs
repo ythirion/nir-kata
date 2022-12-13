@@ -1,4 +1,5 @@
 using LanguageExt;
+using static LanguageExt.Option<Nir_Kata.Parse.Dont.Validate.Month>;
 
 namespace Nir_Kata.Parse.Dont.Validate;
 
@@ -23,9 +24,13 @@ public static class MonthParser
     public static Option<Month> Parse(string potentialMonth) =>
         potentialMonth
             .ToInt()
-            .Match(x => FromInt(x), Option<Month>.None);
+            .Bind(FromInt)
+            .Match(month => month, None);
 
-    private static Month FromInt(int x) => (Month) Enum.GetValues<Month>().GetValue(x - 1)!;
+    private static Option<Month> FromInt(int x) =>
+        Enum.GetValues<Month>()
+            .Find(m => (int) m == x)
+            .Map(foundMonth => foundMonth);
 }
 
 public static class MonthExtensions

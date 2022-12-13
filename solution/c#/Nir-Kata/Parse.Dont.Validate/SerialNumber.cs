@@ -16,6 +16,7 @@ public class SerialNumber
     public static Option<SerialNumber> Parse(string potentialDepartment) =>
         potentialDepartment
             .ToInt()
+            .Filter(x => x is > 0 and <= 999)
             .Match(x => new SerialNumber(x), Option<SerialNumber>.None);
 
     public override string ToString() => _value.ToString("D3");
