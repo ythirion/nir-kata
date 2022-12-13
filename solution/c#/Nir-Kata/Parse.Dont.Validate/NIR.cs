@@ -31,7 +31,7 @@ public readonly struct NIR
 
     private static bool ValidateKey(NIR nir, int key) => nir.Key() == key;
 
-    private int Key() => (int) (97L - ToStringWithoutKey().ToLong().Value() % 97L);
+    public int Key() => (int) (97L - ToStringWithoutKey().ToLong().Value() % 97L);
 
     private static Option<NIR> ParseSafely(string input) =>
         (from sex in SexParser.Parse(input[0])
