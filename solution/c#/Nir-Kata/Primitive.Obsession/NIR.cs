@@ -6,12 +6,12 @@ namespace Nir_Kata.Primitive.Obsession
 
         public static bool Validate(string input) => ValidateLength(input)
                                                      && ValidateSex(input[0])
-                                                     && ValidateYear(input.Substring(1, 2))
-                                                     && ValidateMonth(input.Substring(3, 2))
-                                                     && ValidateDepartment(input.Substring(5, 2))
-                                                     && ValidateCity(input.Substring(7, 3))
-                                                     && ValidateSerialNumber(input.Substring(10, 3))
-                                                     && ValidateKey(input[..13], input[13..]);
+                                                     && ValidateYear(input[1..3])
+                                                     && ValidateMonth(input[3..5])
+                                                     && ValidateDepartment(input[5..7])
+                                                     && ValidateCity(input[7..10])
+                                                     && ValidateSerialNumber(input[10..13])
+                                                     && ValidateKey(input[..13], input[13..15]);
 
         private static bool ValidateLength(string input) => input.Length == ValidLength;
 

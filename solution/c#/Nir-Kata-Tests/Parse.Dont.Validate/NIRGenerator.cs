@@ -12,6 +12,7 @@ public static class NIRGenerator
             from month in Arb.Generate<Month>()
             from department in Gen.Frequency(new[] {Create(9, Gen.Choose(1, 95)), Create(1, Gen.Constant(99))})
             from city in Gen.Choose(1, 999)
-            select new NIR(sex, (Year) year, month, (Department) department, (City) city)
+            from serialNumber in Gen.Choose(1, 999)
+            select new NIR(sex, (Year) year, month, (Department) department, (City) city, (SerialNumber) serialNumber)
         ).ToArbitrary();
 }
