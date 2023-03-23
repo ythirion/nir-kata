@@ -63,23 +63,24 @@ Here are the simplified specifications you will use for this kata:
 
 ### Examples
 Here are some `valid NIRs` regarding those specifications:
+- 223115935012322
+- 200029923123486
 - 254031088723464
 - 195017262676215
 - 155053933981739
 - 106099955391094
-- 221035671987783
-- 171108279305362
 
 And here are some `invalid` ones:
-- 242106259
-- 23401289555186
-- 257079684484218
-- 29602874966603
-- 2001082067222817
-- 279101327853189
-- 159032201199947
-- 928086837619542
-- 1960487994797875
+- 2230 // too short
+- 323115935012322 // incorrect sex
+- 2ab115935012322 // incorrect year
+- 223ab5935012322 // incorrect month
+- 223145935012322 // incorrect month 2
+- 223005935012322 // incorrect month 3
+- 22311xx35012322 // incorrect department
+- 223119635012322 // incorrect department 2
+- 2231159zzz12322 // incorrect city
+- 223115935012321 // incorrect control key
 
 ## Bulletproof your code with "Mutation-based Property-Driven Development"
 Once implemented, you can challenge your system by introducing some mutants in your code.
