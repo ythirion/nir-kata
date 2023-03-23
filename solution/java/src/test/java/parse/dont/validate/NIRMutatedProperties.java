@@ -24,7 +24,7 @@ class NIRMutatedProperties {
     }
 
     private static Mutator sexMutator = new Mutator("Sex mutator", nir ->
-            Gen.choose(3, 9).map(invalidSex -> invalidSex + nir.toString().substring(1))
+            Gen.choose(3, 9).map(invalidSex -> concat(invalidSex, nir.toString().substring(1)))
     );
 
     private static Mutator yearMutator = new Mutator("Year mutator", nir ->
@@ -33,8 +33,20 @@ class NIRMutatedProperties {
                     Tuple.of(3, Gen.choose(1, 9))
             ).map(invalidYear -> concat(
                             nir.toString().charAt(0),
-                            invalidYear.toString(),
+                            invalidYear,
                             nir.toString().substring(3)
+                    )
+            )
+    );
+
+    private static Mutator departmentMutator = new Mutator("Department mutator", nir ->
+            Gen.frequency(
+                    Tuple.of(7, Gen.choose(100, 999)),
+                    Tuple.of(3, Gen.choose(96, 98))
+            ).map(invalidDepartment -> concat(
+                            nir.toString().substring(0, 5),
+                            invalidDepartment,
+                            nir.toString().substring(7)
                     )
             )
     );
@@ -52,6 +64,7 @@ class NIRMutatedProperties {
     private static Arbitrary<Mutator> mutators = Gen.choose(
             sexMutator,
             yearMutator,
+            departmentMutator,
             truncateMutator
     ).arbitrary();
 
