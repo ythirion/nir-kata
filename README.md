@@ -1,6 +1,13 @@
 # NIR kata
-- Write a system that can handle `NIR` (simplified rules explained below)
-- You must apply ["parse don't validate"](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/) principle
+> Write a system that can handle `NIR` (simplified rules explained below)
+
+## 1) Validate a NIR
+- Design a system that can validate if a given `String` is a valid `NIR` number: `String -> Boolean`
+- Use Test Driven Development to do so
+
+
+## 2) Fight Primitive Obsession
+- You must apply ["Parse Don't Validate"](https://xtrem-tdd.netlify.app/Flavours/parse-dont-validate) principle to fight ["Primitive Obsession"](https://xtrem-tdd.netlify.app/Flavours/no-primitive-types)
 - Your `parsing function` must respect the below property
 ```text
 for all (validNir)
