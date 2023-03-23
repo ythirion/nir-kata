@@ -15,7 +15,8 @@ class ValidateNIR {
                 Arguments.of("2230", "too short"),
                 Arguments.of("323115935012322", "incorrect sex"),
                 Arguments.of("2ab115935012322", "incorrect year"),
-                Arguments.of("223ab5935012322", "incorrect month")
+                Arguments.of("223ab5935012322", "incorrect month"),
+                Arguments.of("223145935012322", "incorrect month 2")
         );
     }
 

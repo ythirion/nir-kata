@@ -8,7 +8,7 @@ public class NIR {
         return validateLength(potentialNIR)
                 && validateSex(potentialNIR.charAt(0))
                 && validateYear(potentialNIR.substring(1, 2))
-                && validateMonth(potentialNIR.substring(3, 4));
+                && validateMonth(potentialNIR.substring(3, 5));
     }
 
     private static boolean validateLength(String potentialNIR) {
