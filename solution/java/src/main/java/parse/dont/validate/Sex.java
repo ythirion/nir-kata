@@ -15,8 +15,8 @@ public enum Sex {
         this.value = value;
     }
 
-    public static Either<ParsingError, Sex> parseSex(char input) {
-        return Match(input).of(
+    public static Either<ParsingError, Sex> parseSex(char potentialSex) {
+        return Match(potentialSex).of(
                 Case($('1'), right(M)),
                 Case($('2'), right(F)),
                 Case($(), left((new ParsingError("Not a valid sex"))))

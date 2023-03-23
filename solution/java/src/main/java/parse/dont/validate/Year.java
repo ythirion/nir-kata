@@ -10,7 +10,7 @@ import primitive.obsession.StringExtensions;
 public class Year {
     private final int value;
 
-    public Year(int value) {
+    private Year(int value) {
         this.value = value;
     }
 
@@ -18,6 +18,11 @@ public class Year {
         return potentialYear.toInt()
                 .map(Year::new)
                 .toEither(new ParsingError("year should be between 0 and 99"));
+    }
+
+    public static Year fromInt(Integer x) {
+        return parseYear(x.toString())
+                .getOrElseThrow(() -> new IllegalArgumentException("Year"));
     }
 
     @Override

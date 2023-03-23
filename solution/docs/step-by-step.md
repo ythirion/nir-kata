@@ -613,7 +613,7 @@ Like for the `Sex` type, we design the new type with its generator.
 :red_circle: create a generator
 
 ```java
-private final Gen<Year> yearGenerator = Gen.choose(0, 99).map(Year::new);
+private final Gen<Year> yearGenerator = Gen.choose(0, 99).map(Year::fromInt); // have a private constructor
 private final Gen<Sex> sexGenerator = Gen.choose(Sex.values());
 private final Arbitrary<NIR> validNIR =
         sexGenerator
@@ -643,7 +643,7 @@ public class NIRBuilder {
 ```java
 class NIRProperties {
     private final Random random = new Random();
-    private final Gen<Year> yearGenerator = Gen.choose(0, 99).map(Year::new);
+    private final Gen<Year> yearGenerator = Gen.choose(0, 99).map(Year::fromInt);
     private final Gen<Sex> sexGenerator = Gen.choose(Sex.values());
 
     private Arbitrary<NIR> validNIR =
@@ -728,6 +728,11 @@ public class Year {
         return input.toInt()
                 .map(Year::new)
                 .toEither(new ParsingError("year should be between 0 and 99"));
+    }
+
+    public static Year fromInt(Integer x) {
+        return parseYear(x.toString())
+                .getOrElseThrow(() -> new IllegalArgumentException("Year"));
     }
 
     @Override

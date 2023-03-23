@@ -12,13 +12,21 @@ public class NIR {
     private final Sex sex;
     private final Year year;
     private final Month month;
+    private final Department department;
 
     public static Either<ParsingError, NIR> parseNIR(String input) {
         return parseSex(input.charAt(0))
                 .map(NIRBuilder::new)
                 .flatMap(builder -> parseYear(input.substring(1, 3), builder))
                 .flatMap(builder -> parseMonth(input.substring(3, 5), builder))
-                .map(builder -> new NIR(builder.getSex(), builder.getYear(), builder.getMonth()));
+                .flatMap(builder -> parseDepartment(input.substring(5, 7), builder))
+                .map(builder ->
+                        new NIR(
+                                builder.getSex(),
+                                builder.getYear(),
+                                builder.getMonth(),
+                                builder.getDepartment())
+                );
     }
 
     private static Either<ParsingError, NIRBuilder> parseYear(String input, NIRBuilder builder) {
@@ -29,8 +37,12 @@ public class NIR {
         return Month.parseMonth(input).map(builder::withMonth);
     }
 
+    private static Either<ParsingError, NIRBuilder> parseDepartment(String input, NIRBuilder builder) {
+        return Department.parseDepartment(input).map(builder::withDepartment);
+    }
+
     @Override
     public String toString() {
-        return sex.toString() + year + month;
+        return sex.toString() + year + month + department;
     }
 }
