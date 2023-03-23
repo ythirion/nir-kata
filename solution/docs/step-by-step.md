@@ -158,13 +158,32 @@ public class NIR {
 ```
 
 In refactoring stage, you should always wonder how to improve test code as well.
-Here we could use parameterized tests instead of maintaining 1 test method per "test case".
+We have already some duplication in our tests. We could use parameterized tests instead of maintaining 1 test method per "test case".
 
+With `junit`, we can create `Parameterized Tests` by using `junit-jupiter-params`.
 
+```java
+class ValidateNIR {
+    public static Stream<Arguments> invalidNIRs() {
+        return Stream.of(
+                Arguments.of("", "empty string"),
+                Arguments.of("2230", "too short"),
+                Arguments.of("323115935012322", "incorrect sex")
+        );
+    }
 
-:green_circle:
-:red_circle: 
-:large_blue_circle: 
+    @ParameterizedTest
+    @MethodSource("invalidNIRs")
+    void should_return_false(String input, String reason) {
+        assertThat(NIR.validate(input))
+                .isFalse()
+                .as(reason);
+    }
+}
+```
+
+Test output is now looking like this:
+![Parameterized test output](img/test-output.png)
 
 
 

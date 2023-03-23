@@ -1,25 +1,27 @@
 package primitive.obsession;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ValidateNIR {
-    @Test
-    void validate_empty_string_should_return_false() {
-        assertThat(NIR.validate(""))
-                .isFalse();
+    public static Stream<Arguments> invalidNIRs() {
+        return Stream.of(
+                Arguments.of("", "empty string"),
+                Arguments.of("2230", "too short"),
+                Arguments.of("323115935012322", "incorrect sex")
+        );
     }
 
-    @Test
-    void validate_short_string_should_return_false() {
-        assertThat(NIR.validate("2230"))
-                .isFalse();
-    }
-
-    @Test
-    void validate_with_invalid_sex_should_return_false() {
-        assertThat(NIR.validate("323115935012322"))
-                .isFalse();
+    @ParameterizedTest
+    @MethodSource("invalidNIRs")
+    void should_return_false(String input, String reason) {
+        assertThat(NIR.validate(input))
+                .isFalse()
+                .as(reason);
     }
 }
