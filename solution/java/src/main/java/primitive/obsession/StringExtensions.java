@@ -14,6 +14,12 @@ public class StringExtensions {
                 : none();
     }
 
+    public static Option<Long> toLong(String potentialNumber) {
+        return isANumber(potentialNumber)
+                ? some(Long.parseLong(potentialNumber))
+                : none();
+    }
+
     public static boolean isANumber(String str) {
         return str != null && str.matches("[0-9.]+");
     }

@@ -302,7 +302,7 @@ Invalid NIRs
 ✅ 22311xx35012322 // incorrect department
 ✅ 223119635012322 // incorrect department 2
 ✅ 2231159zzz12322 // incorrect city
-- 223115935012321 // incorrect control key
+✅ 223115935012321 // incorrect control key
 - 2231159350123221 // too long
 
 Valid NIRs

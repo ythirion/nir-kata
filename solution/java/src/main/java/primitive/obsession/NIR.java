@@ -18,7 +18,9 @@ public class NIR {
                 && validateYear(potentialNIR.substring(1, 3))
                 && validateMonth(potentialNIR.substring(3, 5))
                 && validateDepartment(potentialNIR.substring(5, 7))
-                && validateCity(potentialNIR.substring(7, 10));
+                && validateCity(potentialNIR.substring(7, 10))
+                && validateSerialNumber(potentialNIR.substring(10, 13))
+                && validateKey(potentialNIR.substring(0, 13), potentialNIR.substring(13, 15));
     }
 
     private static boolean validateLength(String potentialNIR) {
@@ -43,6 +45,26 @@ public class NIR {
 
     private static boolean validateCity(String city) {
         return city.isANumber();
+    }
+
+    private static boolean validateSerialNumber(String serialNumber) {
+        return serialNumber.isANumber();
+    }
+
+    private static boolean validateKey(String number, String key) {
+        return number.toLong()
+                .map(x -> isValidKey(x, key))
+                .getOrElse(false);
+    }
+
+    private static Boolean isValidKey(Long number, String key) {
+        return key.toInt()
+                .map(k -> calculateKey(number) == k)
+                .getOrElse(false);
+    }
+
+    private static long calculateKey(Long number) {
+        return 97 - (number % 97);
     }
 
     private static boolean validateNumber(String potentialNumber, Function<Integer, Boolean> isValid) {
