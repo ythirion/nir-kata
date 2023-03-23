@@ -1,8 +1,16 @@
 package primitive.obsession;
 
+import lombok.experimental.ExtensionMethod;
+import lombok.experimental.UtilityClass;
+
+import java.util.function.Function;
+
+@UtilityClass
+@ExtensionMethod(StringExtensions.class)
 public class NIR {
     private static final int VALID_LENGTH = 15;
-    private static final char MALE = '1', FEMALE = '2';
+    private static final char MALE = '1';
+    private static final char FEMALE = '2';
 
     public static Boolean validate(String potentialNIR) {
         return validateLength(potentialNIR)
@@ -25,23 +33,18 @@ public class NIR {
     }
 
     private static boolean validateMonth(String month) {
-        if (!isANumber(month)) {
-            return false;
-        }
-
-        var parsedMonth = Integer.parseInt(month);
-        return parsedMonth > 0 && parsedMonth <= 12;
+        return validateNumber(month, x -> x > 0 && x <= 12);
     }
 
     private static boolean validateDepartment(String department) {
-        if (!isANumber(department)) {
-            return false;
-        }
+        return validateNumber(department, x -> x > 0 && (x <= 95 || x == 99));
+    }
 
-        var parsedDepartment = Integer.parseInt(department);
-        return parsedDepartment > 0
-                && parsedDepartment <= 95
-                || parsedDepartment == 99;
+    private static boolean validateNumber(String potentialNumber, Function<Integer, Boolean> isValid) {
+        return potentialNumber
+                .toInt()
+                .map(isValid)
+                .getOrElse(false);
     }
 
     private static boolean isANumber(String potentialNumber) {
