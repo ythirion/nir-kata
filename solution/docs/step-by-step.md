@@ -426,6 +426,8 @@ class ValidateNIR {
 }
 ```
 
+Here is our final test list state from this stage.
+
 ```text
 Invalid NIRs
 ✅ empty string
@@ -450,10 +452,21 @@ Valid NIRs
 ✅ 106099955391094
 ```
 
-Faire 2 schémas :
-- Primitive Obsession : 
-	- montrer les dangers d'avoir 1 String représentant le NIR
-	- Validation partout
-	- Possibilité d'utiliser 1 String non NIR
-- Parse don't validate
-	- schéma comme dans Functional Core Imperative Shell
+### Limit of this approach
+![Limit of primitive types](img/nir-primitive.png)
+
+Know more about `Primitive Obsession` [here](https://xtrem-tdd.netlify.app/Flavours/no-primitive-types)
+
+## 2) Fight Primitive Obsession
+Let's apply ["Parse Don't Validate"](https://xtrem-tdd.netlify.app/Flavours/parse-dont-validate) principle to fight ["Primitive Obsession"](https://xtrem-tdd.netlify.app/Flavours/no-primitive-types).
+We will use [`Property Based Testing`](https://xtrem-tdd.netlify.app/Flavours/pbt) in this part of the kata to design our parser with `vavr
+
+Our `parsing function` must respect the below property
+```text
+for all (validNir)
+parseNIR(nir.toString) == nir
+```
+
+With `parse don't validate` we want to make it impossible to represent an invalid `NIR` in our system:
+
+Our parser may look like this: `String -> Either<ParsingError, NIR>`

@@ -17,7 +17,7 @@ parseNIR(nir.toString) == nir
 in other words with `scalacheck`:
 
 ```scala
-property("isomorphic") = forAll(validNIR) { nir =>
+property("roundtrip") = forAll(validNIR) { nir =>
     parseNIR(nir.toString).value == nir
   }
 ```
