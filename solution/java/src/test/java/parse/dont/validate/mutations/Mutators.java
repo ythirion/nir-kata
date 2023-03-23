@@ -1,31 +1,15 @@
-package parse.dont.validate;
+package parse.dont.validate.mutations;
 
-import io.vavr.Function1;
 import io.vavr.Tuple;
 import io.vavr.collection.List;
 import io.vavr.test.Arbitrary;
 import io.vavr.test.Gen;
-import io.vavr.test.Property;
-import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
-import static io.vavr.API.println;
-import static parse.dont.validate.NIRGenerator.validNIR;
-
-class NIRMutatedProperties {
-    private static final Random random = new Random();
-
+public class Mutators {
     private static Gen<Integer> digits3Gen = Gen.frequency(
             Tuple.of(7, Gen.choose(1000, 9999)),
             Tuple.of(3, Gen.choose(1, 99))
     );
-
-    private record Mutator(String name, Function1<NIR, Gen<String>> func) {
-        public String mutate(NIR nir) {
-            return func.apply(nir).apply(random);
-        }
-    }
 
     private static Mutator sexMutator = new Mutator("Sex mutator", nir ->
             Gen.choose(3, 9).map(invalidSex -> concat(invalidSex, nir.toString().substring(1)))
@@ -90,7 +74,7 @@ class NIRMutatedProperties {
             )
     );
 
-    private static Arbitrary<Mutator> mutators = Gen.choose(
+    public static Arbitrary<Mutator> mutators = Gen.choose(
             sexMutator,
             yearMutator,
             departmentMutator,
@@ -100,18 +84,4 @@ class NIRMutatedProperties {
             truncateMutator
     ).arbitrary();
 
-    @Test
-    void invalidNIRCanNeverBeParsed() {
-        Property.def("parseNIR(nir.ToString()) == nir")
-                .forAll(validNIR, mutators)
-                .suchThat(NIRMutatedProperties::canNotParseMutatedNIR)
-                .check()
-                .assertIsSatisfied();
-    }
-
-    private static boolean canNotParseMutatedNIR(NIR nir, Mutator mutator) {
-        var mutatedNIR = mutator.mutate(nir);
-        println("NIR: " + nir + " | " + mutator.name + " : " + mutatedNIR);
-        return NIR.parseNIR(mutatedNIR).isLeft();
-    }
 }

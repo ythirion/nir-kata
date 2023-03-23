@@ -910,3 +910,5 @@ public class NIR {
     ...
 }
 ```
+
+By doing it you will bulletproof the `NIR` code and leanr a lot from the `property`.

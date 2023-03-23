@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static parse.dont.validate.NIRGenerator.validNIR;
 
-class NIRProperties {
+class RoundTripping {
     @Test
     void roundTrip() {
         Property.def("parseNIR(nir.ToString()) == nir")
