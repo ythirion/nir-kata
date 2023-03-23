@@ -300,7 +300,7 @@ Invalid NIRs
 ✅ 223145935012322 // incorrect month 2
 ✅ 223005935012322 // incorrect month 3
 ✅ 22311xx35012322 // incorrect department
-- 223119635012322 // incorrect department 2
+✅ 223119635012322 // incorrect department 2
 - 2231159zzz12322 // incorrect city
 - 223115935012321 // incorrect control key
 - 2231159350123221 // too long

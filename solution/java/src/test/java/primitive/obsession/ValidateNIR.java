@@ -18,7 +18,8 @@ class ValidateNIR {
                 Arguments.of("223ab5935012322", "incorrect month"),
                 Arguments.of("223145935012322", "incorrect month 2"),
                 Arguments.of("223005935012322", "incorrect month 3"),
-                Arguments.of("22311xx35012322", "incorrect department")
+                Arguments.of("22311xx35012322", "incorrect department"),
+                Arguments.of("223119635012322", "incorrect department 2")
         );
     }
 
