@@ -82,7 +82,7 @@ And here are some `invalid` ones:
 - 2231159zzz12322 // incorrect city
 - 223115935012321 // incorrect control key
 
-## Bulletproof your code with "Mutation-based Property-Driven Development"
+## 3) Bulletproof your code with "Mutation-based Property-Driven Development"
 Once implemented, you can challenge your system by introducing some mutants in your code.
 We can create mutation on purpose thanks to our strong typing system (by introducing mutants in `valid NIRs`).
 
@@ -95,13 +95,16 @@ Some example of mutations:
 
 Read more about it [here](https://abailly.github.io/posts/mutation-testing.html)
 
-## "Solution"
-Proposal of solution are available in the `solution` directory:
+## "Solutions"
+Proposal of solutions are available in the `solution` directory:
 
+- `C#` with `xUnit` | `LanguageExt` | `FsCheck`
+- `java` with `jUnit` | `vavr` | `vavr-test`
 - `scala 3` with `scalatest` | `scalacheck`
 - `F#` with `xUnit` | `FsCheck`
 - `kotlin` with `kotest`
-- `C#` with `xUnit` | `LanguageExt` | `FsCheck`
+
+A step-by-step guide in `java` is available [here](solution/docs/step-by-step.md)
 
 ## Resources
 - [NIR full specification](https://fr.wikipedia.org/wiki/Num%C3%A9ro_de_s%C3%A9curit%C3%A9_sociale_en_France)
