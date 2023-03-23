@@ -22,7 +22,7 @@ public class NIR {
     private final City city;
     private final SerialNumber serialNumber;
 
-    private int key() {
+    public int key() {
         return stringWithoutKey()
                 .toLong()
                 .map(x -> (97L - x % 97L))

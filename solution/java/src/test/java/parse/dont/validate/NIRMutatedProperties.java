@@ -71,6 +71,15 @@ class NIRMutatedProperties {
             )
     );
 
+    private static Mutator keyMutator = new Mutator("Key mutator", nir ->
+            Gen.choose(0, 97)
+                    .filter(x -> x != nir.key())
+                    .map(invalidKey -> concat(
+                            nir.toString().substring(0, 13),
+                            String.format("%02d", invalidKey)
+                    ))
+    );
+
     private static String concat(Object... elements) {
         return List.of(elements).mkString();
     }
@@ -87,6 +96,7 @@ class NIRMutatedProperties {
             departmentMutator,
             cityMutator,
             serialNumberMutator,
+            keyMutator,
             truncateMutator
     ).arbitrary();
 
@@ -101,7 +111,7 @@ class NIRMutatedProperties {
 
     private static boolean canNotParseMutatedNIR(NIR nir, Mutator mutator) {
         var mutatedNIR = mutator.mutate(nir);
-        println("NIR: " + nir + " Mutator: " + mutator.name + " / " + mutatedNIR);
+        println("NIR: " + nir + " | " + mutator.name + " : " + mutatedNIR);
         return NIR.parseNIR(mutatedNIR).isLeft();
     }
 }
