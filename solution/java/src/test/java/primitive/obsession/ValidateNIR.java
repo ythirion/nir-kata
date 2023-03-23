@@ -13,7 +13,8 @@ class ValidateNIR {
         return Stream.of(
                 Arguments.of("", "empty string"),
                 Arguments.of("2230", "too short"),
-                Arguments.of("323115935012322", "incorrect sex")
+                Arguments.of("323115935012322", "incorrect sex"),
+                Arguments.of("2ab115935012322", "incorrect year")
         );
     }
 

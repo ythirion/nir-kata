@@ -185,9 +185,55 @@ class ValidateNIR {
 Test output is now looking like this:
 ![Parameterized test output](img/test-output.png)
 
+## Incorrect Year
+:red_circle: Continue to add feature from our test list.
 
+```java
+public static Stream<Arguments> invalidNIRs() {
+	return Stream.of(
+		...
+		Arguments.of("2ab115935012322", "incorrect year")
+	);
+}
+```
 
-Step by step
+> Be careful when using `Parameterized tests` to move 1 test case at a time.
+
+:green_circle: Make it pass by hardcoding year validation. 
+
+```java
+public class NIR {
+    private static final int VALID_LENGTH = 15;
+
+    public static Boolean validate(String potentialNIR) {
+        return validateLength(potentialNIR)
+                && validateSex(potentialNIR)
+                && validateYear(potentialNIR);
+    }
+
+    private static boolean validateLength(String potentialNIR) {
+        return potentialNIR.length() == VALID_LENGTH;
+    }
+
+    private static boolean validateSex(String potentialNIR) {
+        return potentialNIR.charAt(0) == '1' || potentialNIR.charAt(0) == '2';
+    }
+
+    private static boolean validateYear(String potentialNIR) {
+        return false;
+    }
+}
+```
+
+:large_blue_circle: Implement year validation as expressed in specification.
+I choose to use Regex to check whether `Year is a valid number or not`.
+```java
+private static boolean validateYear(String potentialNIR) {
+	return potentialNIR
+			.substring(1, 2)
+			.matches("[0-9.]+");
+}
+```
 
 Faire 2 schémas :
 - Primitive Obsession : 

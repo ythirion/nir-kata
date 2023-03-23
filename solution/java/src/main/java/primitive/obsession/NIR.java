@@ -5,14 +5,22 @@ public class NIR {
 
     public static Boolean validate(String potentialNIR) {
         return validateLength(potentialNIR)
-                && validateSex(potentialNIR);
+                && validateSex(potentialNIR.charAt(0))
+                && validateYear(potentialNIR);
+        //&& validateYear(potentialNIR.substring(1, 2));
     }
 
     private static boolean validateLength(String potentialNIR) {
         return potentialNIR.length() == VALID_LENGTH;
     }
 
-    private static boolean validateSex(String potentialNIR) {
-        return potentialNIR.charAt(0) == '1' || potentialNIR.charAt(0) == '2';
+    private static boolean validateSex(char sex) {
+        return sex == '1' || sex == '2';
+    }
+
+    private static boolean validateYear(String potentialNIR) {
+        return potentialNIR
+                .substring(1, 2)
+                .matches("[0-9.]+");
     }
 }
