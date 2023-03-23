@@ -97,7 +97,7 @@ public class NIR {
 Our test list is now looking like this:
 ```text
 Invalid NIRs
-✅empty string
+✅ empty string
 ✅ 2230 // too short
 - 323115935012322 // incorrect sex
 - 2ab115935012322 // incorrect year
@@ -185,7 +185,7 @@ class ValidateNIR {
 Test output is now looking like this:
 ![Parameterized test output](img/test-output.png)
 
-## Incorrect Year
+### Incorrect Year
 :red_circle: Continue to add feature from our test list.
 
 ```java
@@ -265,6 +265,31 @@ public class NIR {
 }
 ```
 
+```text
+Invalid NIRs
+✅ empty string
+✅ 2230 // too short
+✅ 323115935012322 // incorrect sex
+✅ 2ab115935012322 // incorrect year
+- 223ab5935012322 // incorrect month
+- 223145935012322 // incorrect month 2
+- 223005935012322 // incorrect month 3
+- 22311xx35012322 // incorrect department
+- 223119635012322 // incorrect department 2
+- 2231159zzz12322 // incorrect city
+- 223115935012321 // incorrect control key
+- 2231159350123221 // too long
+
+Valid NIRs
+- 223115935012322
+- 200029923123486
+- 254031088723464
+- 195017262676215
+- 155053933981739
+- 106099955391094
+```
+
+### Fast Forward invalid NIRs
 
 
 
