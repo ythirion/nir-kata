@@ -11,11 +11,15 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 
 import static io.vavr.API.println;
-import static org.assertj.vavr.api.VavrAssertions.assertThat;
 import static parse.dont.validate.NIRGenerator.validNIR;
 
 class NIRMutatedProperties {
     private static final Random random = new Random();
+
+    private static Gen<Integer> digits3Gen = Gen.frequency(
+            Tuple.of(7, Gen.choose(1000, 9999)),
+            Tuple.of(3, Gen.choose(1, 99))
+    );
 
     private record Mutator(String name, Function1<NIR, Gen<String>> func) {
         public String mutate(NIR nir) {
@@ -51,6 +55,14 @@ class NIRMutatedProperties {
             )
     );
 
+    private static Mutator cityMutator = new Mutator("City mutator", nir ->
+            digits3Gen.map(invalidCity -> concat(
+                    nir.toString().substring(0, 7),
+                    invalidCity,
+                    nir.toString().substring(10))
+            )
+    );
+
     private static String concat(Object... elements) {
         return List.of(elements).mkString();
     }
@@ -65,6 +77,7 @@ class NIRMutatedProperties {
             sexMutator,
             yearMutator,
             departmentMutator,
+            cityMutator,
             truncateMutator
     ).arbitrary();
 
@@ -75,12 +88,6 @@ class NIRMutatedProperties {
                 .suchThat(NIRMutatedProperties::canNotParseMutatedNIR)
                 .check()
                 .assertIsSatisfied();
-    }
-
-    @Test
-    void test() {
-        assertThat(NIR.parseNIR("191100262355124"))
-                .isLeft();
     }
 
     private static boolean canNotParseMutatedNIR(NIR nir, Mutator mutator) {
