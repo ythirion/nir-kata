@@ -298,7 +298,7 @@ Invalid NIRs
 ✅ 2ab115935012322 // incorrect year
 ✅ 223ab5935012322 // incorrect month
 ✅ 223145935012322 // incorrect month 2
-- 223005935012322 // incorrect month 3
+✅ 223005935012322 // incorrect month 3
 - 22311xx35012322 // incorrect department
 - 223119635012322 // incorrect department 2
 - 2231159zzz12322 // incorrect city
