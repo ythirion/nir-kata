@@ -26,11 +26,29 @@ class ValidateNIR {
         );
     }
 
+    public static Stream<Arguments> validNIRs() {
+        return Stream.of(
+                Arguments.of("223115935012322"),
+                Arguments.of("200029923123486"),
+                Arguments.of("254031088723464"),
+                Arguments.of("195017262676215"),
+                Arguments.of("155053933981739"),
+                Arguments.of("106099955391094")
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("invalidNIRs")
     void should_return_false(String input, String reason) {
         assertThat(NIR.validate(input))
                 .as(reason)
                 .isFalse();
+    }
+
+    @ParameterizedTest
+    @MethodSource("validNIRs")
+    void should_return_true(String input) {
+        assertThat(NIR.validate(input))
+                .isTrue();
     }
 }

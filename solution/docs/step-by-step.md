@@ -290,6 +290,12 @@ Valid NIRs
 ```
 
 ### Fast Forward invalid NIRs
+Here are the iterations:
+![Fast forward](img/fast-forward.png)
+
+You can see their details from the git history.
+Here is where we are in our test list:
+
 ```text
 Invalid NIRs
 ✅ empty string
@@ -314,7 +320,7 @@ Valid NIRs
 - 106099955391094
 ```
 
-Here are some interesting stuff made during the implementation.
+Some interesting stuff made during the implementation.
 - Use `lombok` to define `Extension methods` on `String`
 - Use `vavr` to use a more functional and less imperative way of coding
 
@@ -365,6 +371,84 @@ public class NIR {
         return potentialNumber.matches("[0-9.]+");
     }
 }
+```
+
+### Passing Test Cases
+Because we have used `Triangulation` on invalid NIRs we already have created a general implementation.
+
+`The more specific tests you write, the more the code will become generic.`
+
+All our valid `NIRs` are already well validated, we do not have to modify anything in our production code.
+
+```java
+class ValidateNIR {
+    public static Stream<Arguments> invalidNIRs() {
+        return Stream.of(
+                Arguments.of("", "empty string"),
+                Arguments.of("2230", "too short"),
+                Arguments.of("323115935012322", "incorrect sex"),
+                Arguments.of("2ab115935012322", "incorrect year"),
+                Arguments.of("223ab5935012322", "incorrect month"),
+                Arguments.of("223145935012322", "incorrect month 2"),
+                Arguments.of("223005935012322", "incorrect month 3"),
+                Arguments.of("22311xx35012322", "incorrect department"),
+                Arguments.of("223119635012322", "incorrect department 2"),
+                Arguments.of("2231159zzz12322", "incorrect city"),
+                Arguments.of("223115935012321", "incorrect key"),
+                Arguments.of("2231159350123221", "too long")
+        );
+    }
+
+    public static Stream<Arguments> validNIRs() {
+        return Stream.of(
+                Arguments.of("223115935012322"),
+                Arguments.of("200029923123486"),
+                Arguments.of("254031088723464"),
+                Arguments.of("195017262676215"),
+                Arguments.of("155053933981739"),
+                Arguments.of("106099955391094")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidNIRs")
+    void should_return_false(String input, String reason) {
+        assertThat(NIR.validate(input))
+                .as(reason)
+                .isFalse();
+    }
+
+    @ParameterizedTest
+    @MethodSource("validNIRs")
+    void should_return_true(String input) {
+        assertThat(NIR.validate(input))
+                .isTrue();
+    }
+}
+```
+
+```text
+Invalid NIRs
+✅ empty string
+✅ 2230 // too short
+✅ 323115935012322 // incorrect sex
+✅ 2ab115935012322 // incorrect year
+✅ 223ab5935012322 // incorrect month
+✅ 223145935012322 // incorrect month 2
+✅ 223005935012322 // incorrect month 3
+✅ 22311xx35012322 // incorrect department
+✅ 223119635012322 // incorrect department 2
+✅ 2231159zzz12322 // incorrect city
+✅ 223115935012321 // incorrect control key
+✅ 2231159350123221 // too long
+
+Valid NIRs
+✅ 223115935012322
+✅ 200029923123486
+✅ 254031088723464
+✅ 195017262676215
+✅ 155053933981739
+✅ 106099955391094
 ```
 
 Faire 2 schémas :
