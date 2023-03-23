@@ -63,6 +63,14 @@ class NIRMutatedProperties {
             )
     );
 
+    private static Mutator serialNumberMutator = new Mutator("Serial Number mutator", nir ->
+            digits3Gen.map(invalidSerialNumber -> concat(
+                    nir.toString().substring(0, 10),
+                    invalidSerialNumber,
+                    nir.toString().substring(13))
+            )
+    );
+
     private static String concat(Object... elements) {
         return List.of(elements).mkString();
     }
@@ -78,6 +86,7 @@ class NIRMutatedProperties {
             yearMutator,
             departmentMutator,
             cityMutator,
+            serialNumberMutator,
             truncateMutator
     ).arbitrary();
 
