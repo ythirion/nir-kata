@@ -12,6 +12,7 @@ public class NIRBuilder {
     private Year year;
     private Month month;
     private Department department;
+    private City city;
 
     public NIRBuilder(Sex sex) {
         this.sex = sex;

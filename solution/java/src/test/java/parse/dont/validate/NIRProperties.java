@@ -18,13 +18,22 @@ class NIRProperties {
                             Tuple.of(1, Gen.choose(99)))
                     .map(Department::fromInt);
 
+    private final Gen<City> cityGenerator = Gen.choose(1, 999).map(City::fromInt);
     private final Arbitrary<NIR> validNIR =
             sexGenerator
                     .map(NIRBuilder::new)
                     .map(nirBuilder -> nirBuilder.withYear(yearGenerator.apply(random)))
                     .map(nirBuilder -> nirBuilder.withMonth(monthGenerator.apply(random)))
                     .map(nirBuilder -> nirBuilder.withDepartment(departmentGenerator.apply(random)))
-                    .map(x -> new NIR(x.getSex(), x.getYear(), x.getMonth(), x.getDepartment()))
+                    .map(nirBuilder -> nirBuilder.withCity(cityGenerator.apply(random)))
+                    .map(x -> new NIR(
+                                    x.getSex(),
+                                    x.getYear(),
+                                    x.getMonth(),
+                                    x.getDepartment(),
+                                    x.getCity()
+                            )
+                    )
                     .arbitrary();
 
     @Test
