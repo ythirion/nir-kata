@@ -21,7 +21,8 @@ class ValidateNIR {
                 Arguments.of("22311xx35012322", "incorrect department"),
                 Arguments.of("223119635012322", "incorrect department 2"),
                 Arguments.of("2231159zzz12322", "incorrect city"),
-                Arguments.of("223115935012321", "incorrect key")
+                Arguments.of("223115935012321", "incorrect key"),
+                Arguments.of("2231159350123221", "too long")
         );
     }
 
@@ -29,7 +30,7 @@ class ValidateNIR {
     @MethodSource("invalidNIRs")
     void should_return_false(String input, String reason) {
         assertThat(NIR.validate(input))
-                .isFalse()
-                .as(reason);
+                .as(reason)
+                .isFalse();
     }
 }
