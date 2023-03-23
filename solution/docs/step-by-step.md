@@ -497,8 +497,7 @@ class NIRProperties {
 
 :green_circle: Make it pass.
 - Generate the `NIR` class
-- Handle error with a data structure: `ParseError`
-- 
+- Handle error with a data structure: `ParsingError`
 
 ```java
 public record ParseError(String message) {
@@ -506,7 +505,7 @@ public record ParseError(String message) {
 
 @EqualsAndHashCode
 public class NIR {
-    public static Either<ParseError, NIR> parse(String input) {
+    public static Either<ParsingError, NIR> parse(String input) {
         return right(new NIR());
     }
 
@@ -531,7 +530,7 @@ class NIRProperties {
 ```
 
 ### Type-Driven Development
-- Create the `Sex` type
+:large_blue_circle: Create the `Sex` type
   - We choose to use an `enum` for that
   - It is immutable by design
   - We need to work on the `String` representation of it
@@ -547,12 +546,12 @@ public enum Sex {
         this.value = value;
     }
 
-    public static Either<ParseError, Sex> parseSex(char input) {
+    public static Either<ParsingError, Sex> parseSex(char input) {
         // vavr Pattern matching
         return Match(input).of(
                 Case($('1'), right(M)),
                 Case($('2'), right(F)),
-                Case($(), left((new ParseError("Not a valid sex"))))
+                Case($(), left((new ParsingError("Not a valid sex"))))
         );
     }
 
@@ -607,3 +606,151 @@ class NIRProperties {
     }
 }
 ```
+
+### Design the Year type
+Like for the `Sex` type, we design the new type with its generator.
+
+:red_circle: create a generator
+
+```java
+private final Gen<Year> yearGenerator = Gen.choose(0, 99).map(Year::new);
+private final Gen<Sex> sexGenerator = Gen.choose(Sex.values());
+private final Arbitrary<NIR> validNIR =
+        sexGenerator
+                .map(NIR::new)
+                // use the yearGenerator here
+                .arbitrary();
+```
+
+:green_circle: To be able to use the `yearGenerator`, we need to have a context to be able to map into it.
+It is a mutable data structure that we enrich with the result of each generator. We create a `Builder` class for it:
+
+```java
+@With
+@Getter
+@AllArgsConstructor
+public class NIRBuilder {
+    private final Sex sex;
+    private Year year;
+
+    public NIRBuilder(Sex sex) {
+        this.sex = sex;
+    }
+}
+```
+
+- We now adapt the `NIRProperties` to use this `Builder`
+```java
+class NIRProperties {
+    private final Random random = new Random();
+    private final Gen<Year> yearGenerator = Gen.choose(0, 99).map(Year::new);
+    private final Gen<Sex> sexGenerator = Gen.choose(Sex.values());
+
+    private Arbitrary<NIR> validNIR =
+            sexGenerator
+                    .map(NIRBuilder::new)
+                    .map(builder -> builder.withYear(yearGenerator.apply(random)))
+                    .map(x -> new NIR(x.getSex(), x.getYear()))
+                    .arbitrary();
+
+    @Test
+    void roundTrip() {
+        Property.def("parseNIR(nir.ToString()) == nir")
+                .forAll(validNIR)
+                .suchThat(nir -> NIR.parseNIR(nir.toString()).contains(nir))
+                .check()
+                .assertIsSatisfied();
+    }
+}
+```
+
+- We now have to adapt the `NIR` class to handle the `Year` in its construct
+  - We will use the same `Builder` construct (in other languages we may use `for comprehension` or `LinQ` for example)
+
+```java
+@EqualsAndHashCode
+@AllArgsConstructor
+public class NIR {
+    private final Sex sex;
+    private final Year year;
+
+    public static Either<ParsingError, NIR> parseNIR(String input) {
+        return parseSex(input.charAt(0))
+                .map(NIRBuilder::new)
+                .flatMap(builder -> right(builder.withYear(new Year(1))))
+                .map(builder -> new NIR(builder.getSex(), builder.getYear()));
+    }
+
+    @Override
+    public String toString() {
+        return sex.toString() + year;
+    }
+}
+```
+
+:large_blue_circle: We can now work on the `Year` type and its `parser`
+
+```java
+@EqualsAndHashCode
+@AllArgsConstructor
+public class NIR {
+    private final Sex sex;
+    private final Year year;
+
+    public static Either<ParsingError, NIR> parseNIR(String input) {
+        return parseSex(input.charAt(0))
+                .map(NIRBuilder::new)
+                .flatMap(builder -> parseYear(input.substring(1, 3), builder))
+                .map(builder -> new NIR(builder.getSex(), builder.getYear()));
+    }
+
+    private static Either<ParsingError, NIRBuilder> parseYear(String input, NIRBuilder builder) {
+        return Year.parseYear(input)
+                .map(builder::withYear);
+    }
+
+    @Override
+    public String toString() {
+        return sex.toString() + year;
+    }
+}
+
+@EqualsAndHashCode
+@ExtensionMethod(StringExtensions.class)
+public class Year {
+    private final int value;
+
+    public Year(int value) {
+        this.value = value;
+    }
+
+    public static Either<ParsingError, Year> parseYear(String input) {
+        return input.toInt()
+                .map(Year::new)
+                .toEither(new ParsingError("year should be between 0 and 99"));
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%02d", value);
+    }
+}
+```
+
+We can check `Properties` generation by printing the generated nirs:
+```text
+214
+241
+240
+182
+138
+294
+280
+252
+158
+265
+213
+225
+275
+```
+
