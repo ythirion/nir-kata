@@ -19,6 +19,7 @@ class NIRProperties {
                     .map(Department::fromInt);
 
     private final Gen<City> cityGenerator = Gen.choose(1, 999).map(City::fromInt);
+    private final Gen<SerialNumber> serialNumberGenerator = Gen.choose(1, 999).map(SerialNumber::fromInt);
     private final Arbitrary<NIR> validNIR =
             sexGenerator
                     .map(NIRBuilder::new)
@@ -26,12 +27,14 @@ class NIRProperties {
                     .map(nirBuilder -> nirBuilder.withMonth(monthGenerator.apply(random)))
                     .map(nirBuilder -> nirBuilder.withDepartment(departmentGenerator.apply(random)))
                     .map(nirBuilder -> nirBuilder.withCity(cityGenerator.apply(random)))
+                    .map(nirBuilder -> nirBuilder.withSerialNumber(serialNumberGenerator.apply(random)))
                     .map(x -> new NIR(
                                     x.getSex(),
                                     x.getYear(),
                                     x.getMonth(),
                                     x.getDepartment(),
-                                    x.getCity()
+                                    x.getCity(),
+                                    x.getSerialNumber()
                             )
                     )
                     .arbitrary();
