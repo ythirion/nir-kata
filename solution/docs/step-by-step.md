@@ -838,6 +838,7 @@ class NIRMutatedProperties {
 
 - Define mutators like this:
 ```text
+✅ Sex Mutator
 Truncate the NIR
 Year Mutator
 Month Mutator
@@ -911,4 +912,132 @@ public class NIR {
 }
 ```
 
-By doing it you will bulletproof the `NIR` code and leanr a lot from the `property`.
+```text
+✅ Sex Mutator
+✅ Truncate the NIR
+Year Mutator
+Month Mutator
+Department Mutator
+City Mutator
+Serial Number Mutator
+Key Mutator
+```
+
+### Fast Forward Mutators
+Here are the iterations (you can see their details from the git history):
+![Fast Forward Mutators](img/fast-forward-mutators.png)
+
+```text
+✅ Sex Mutator
+✅ Truncate the NIR
+✅ Year Mutator
+✅ Month Mutator
+✅ Department Mutator
+✅ City Mutator
+✅ Serial Number Mutator
+✅ Key Mutator
+```
+
+At the end, the code looks like this:
+```java
+public class Mutators {
+    private static Gen<Integer> digits3Gen = Gen.frequency(
+            Tuple.of(7, Gen.choose(1000, 9999)),
+            Tuple.of(3, Gen.choose(1, 99))
+    );
+
+    private static Mutator sexMutator = new Mutator("Sex mutator", nir ->
+            Gen.choose(3, 9).map(invalidSex -> concat(invalidSex, nir.toString().substring(1)))
+    );
+
+    private static Mutator yearMutator = new Mutator("Year mutator", nir ->
+            Gen.frequency(
+                    Tuple.of(7, Gen.choose(100, 999)),
+                    Tuple.of(3, Gen.choose(1, 9))
+            ).map(invalidYear -> concat(
+                            nir.toString().charAt(0),
+                            invalidYear,
+                            nir.toString().substring(3)
+                    )
+            )
+    );
+
+    private static Mutator departmentMutator = new Mutator("Department mutator", nir ->
+            Gen.frequency(
+                    Tuple.of(7, Gen.choose(100, 999)),
+                    Tuple.of(3, Gen.choose(96, 98))
+            ).map(invalidDepartment -> concat(
+                            nir.toString().substring(0, 5),
+                            invalidDepartment,
+                            nir.toString().substring(7)
+                    )
+            )
+    );
+
+    private static Mutator cityMutator = new Mutator("City mutator", nir ->
+            digits3Gen.map(invalidCity -> concat(
+                    nir.toString().substring(0, 7),
+                    invalidCity,
+                    nir.toString().substring(10))
+            )
+    );
+
+    private static Mutator serialNumberMutator = new Mutator("Serial Number mutator", nir ->
+            digits3Gen.map(invalidSerialNumber -> concat(
+                    nir.toString().substring(0, 10),
+                    invalidSerialNumber,
+                    nir.toString().substring(13))
+            )
+    );
+
+    private static Mutator keyMutator = new Mutator("Key mutator", nir ->
+            Gen.choose(0, 97)
+                    .filter(x -> x != nir.key())
+                    .map(invalidKey -> concat(
+                            nir.toString().substring(0, 13),
+                            String.format("%02d", invalidKey)
+                    ))
+    );
+
+    private static String concat(Object... elements) {
+        return List.of(elements).mkString();
+    }
+
+    private static Mutator truncateMutator = new Mutator("Truncate mutator", nir ->
+            Gen.choose(1, 13).map(size ->
+                    size == 1 ? "" : nir.toString().substring(0, size - 1)
+            )
+    );
+
+    public static Arbitrary<Mutator> mutators = Gen.choose(
+            sexMutator,
+            yearMutator,
+            departmentMutator,
+            cityMutator,
+            serialNumberMutator,
+            keyMutator,
+            truncateMutator
+    ).arbitrary();
+}
+
+class MutatedProperties {
+  @Test
+  void invalidNIRCanNeverBeParsed() {
+    Property.def("parseNIR(nir.ToString()) == nir")
+            .forAll(validNIR, mutators)
+            .suchThat(MutatedProperties::canNotParseMutatedNIR)
+            .check()
+            .assertIsSatisfied();
+  }
+
+  private static boolean canNotParseMutatedNIR(NIR nir, Mutator mutator) {
+    return NIR.parseNIR(mutator.mutate(nir)).isLeft();
+  }
+}
+```
+
+## Let's conclude
+![Parsing](img/nir-parse.png)
+
+By using this approach you can mix T.D.D with Type Driven Development, Property-Based Testing and Mutators to design extremely robust code.
+Indeed, it can help you quickly identify edge cases in your system.
