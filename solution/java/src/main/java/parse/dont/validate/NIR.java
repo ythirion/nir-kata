@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.ExtensionMethod;
 import primitive.obsession.StringExtensions;
 
+import static io.vavr.control.Either.left;
 import static java.lang.String.format;
 import static parse.dont.validate.Sex.parseSex;
 
@@ -13,6 +14,7 @@ import static parse.dont.validate.Sex.parseSex;
 @AllArgsConstructor
 @ExtensionMethod(StringExtensions.class)
 public class NIR {
+    private static final int VALID_LENGTH = 15;
     private final Sex sex;
     private final Year year;
     private final Month month;
@@ -29,11 +31,18 @@ public class NIR {
     }
 
     public static Either<ParsingError, NIR> parseNIR(String input) {
-        return parseSafely(input)
-                .flatMap(nir -> checkKey(input.substring(13), nir));
+        return input.length() != VALID_LENGTH
+                ? left(new ParsingError("Not a valid NIR: should have a length of " + input.length()))
+                : parseSafely(input);
     }
 
     private static Either<ParsingError, NIR> parseSafely(String input) {
+        return toNIR(input)
+                .flatMap(nir -> checkKey(input.substring(13), nir));
+    }
+
+
+    private static Either<ParsingError, NIR> toNIR(String input) {
         return parseSex(input.charAt(0))
                 .map(NIRBuilder::new)
                 .flatMap(builder -> parseYear(input.substring(1, 3), builder))

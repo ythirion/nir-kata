@@ -791,7 +791,7 @@ for all (validNir)
 mutate(nir.toString) == left
 ```
 
-- Create a `Sex` mutator
+### Create a `Sex` mutator
 ```java
   private record Mutator(String name, Function1<NIR, Gen<String>> mutate){}
 
@@ -833,5 +833,80 @@ class NIRMutatedProperties {
     private static boolean canNotParseMutatedNIR(NIR nir, Mutator mutator) {
         return NIR.parseNIR(mutator.mutate(nir)).isLeft();
     }
+}
+```
+
+- Define mutators like this:
+```text
+Truncate the NIR
+Year Mutator
+Month Mutator
+Department Mutator
+City Mutator
+Serial Number Mutator
+Key Mutator
+```
+
+### Truncate mutator
+- Truncate a valid `NIR` string
+```java
+  private static Mutator truncateMutator = new Mutator("Truncate mutator", nir ->
+          Gen.choose(1, 13).map(size ->
+                  size == 1 ? "" : nir.toString().substring(0, size - 1)
+          )
+  );
+```
+
+- Let's use it in our `property` by simply adding it to the mutators
+```java
+private static Arbitrary<Mutator> mutators = Gen.choose(
+          sexMutator,
+          truncateMutator
+  ).arbitrary();
+```
+
+- By using it, we can identify that we have an issue regarding parsing a `String` that has not the right size
+  - We can now fix our production code
+
+```java
+@EqualsAndHashCode
+@AllArgsConstructor
+@ExtensionMethod(StringExtensions.class)
+public class NIR {
+    ...
+    public static Either<ParsingError, NIR> parseNIR(String input) {
+        // Handle the length of the input
+        return input.length() != VALID_LENGTH
+                ? left(new ParsingError("Not a valid NIR: should have a length of " + input.length()))
+                : parseSafely(input);
+    }
+
+    private static Either<ParsingError, NIR> parseSafely(String input) {
+        return toNIR(input)
+                .flatMap(nir -> checkKey(input.substring(13), nir));
+    }
+
+
+    private static Either<ParsingError, NIR> toNIR(String input) {
+        return parseSex(input.charAt(0))
+                .map(NIRBuilder::new)
+                .flatMap(builder -> parseYear(input.substring(1, 3), builder))
+                .flatMap(builder -> parseMonth(input.substring(3, 5), builder))
+                .flatMap(builder -> parseDepartment(input.substring(5, 7), builder))
+                .flatMap(builder -> parseCity(input.substring(7, 10), builder))
+                .flatMap(builder -> parseSerialNumber(input.substring(10, 13), builder))
+                .flatMap(builder -> parseKey(input.substring(13, 15), builder))
+                .map(builder ->
+                        new NIR(
+                                builder.getSex(),
+                                builder.getYear(),
+                                builder.getMonth(),
+                                builder.getDepartment(),
+                                builder.getCity(),
+                                builder.getSerialNumber()
+                        )
+                );
+    }
+    ...
 }
 ```

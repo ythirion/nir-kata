@@ -20,12 +20,19 @@ class NIRMutatedProperties {
     }
 
     private static Mutator sexMutator = new Mutator("Sex mutator", nir ->
-            Gen.choose(3, 9)
-                    .map(invalidSex -> invalidSex + nir.toString().substring(1))
+            Gen.choose(3, 9).map(invalidSex -> invalidSex + nir.toString().substring(1))
+    );
+
+    private static Mutator truncateMutator = new Mutator("Truncate mutator", nir ->
+            Gen.choose(1, 13).map(size ->
+                    size == 1 ? "" : nir.toString().substring(0, size - 1)
+            )
     );
 
     private static Arbitrary<Mutator> mutators = Gen.choose(
-            sexMutator).arbitrary();
+            sexMutator,
+            truncateMutator
+    ).arbitrary();
 
     @Test
     void invalidNIRCanNeverBeParsed() {
