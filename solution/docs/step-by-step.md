@@ -470,3 +470,64 @@ parseNIR(nir.toString) == nir
 With `parse don't validate` we want to make it impossible to represent an invalid `NIR` in our system:
 
 Our parser may look like this: `String -> Either<ParsingError, NIR>`
+
+### Create the `Roundtrip` property
+- Add `vavr-test` to do so
+
+```kotlin
+testImplementation("io.vavr:vavr-test:0.10.4")
+```
+
+:red_circle: Specify the property
+
+```java
+class NIRProperties {
+    private Arbitrary<NIR> validNIR = null;
+
+    @Test
+    void roundTrip() {
+        Property.def("parseNIR(nir.ToString()) == nir")
+                .forAll(validNIR)
+                .suchThat(nir -> NIR.parse(nir.toString()).contains(nir))
+                .check()
+                .assertIsSatisfied();
+    }
+}
+```
+
+:green_circle: Make it pass.
+- Generate the `NIR` class
+- Handle error with a data structure: `ParseError`
+- 
+
+```java
+public record ParseError(String message) {
+}
+
+@EqualsAndHashCode
+public class NIR {
+    public static Either<ParseError, NIR> parse(String input) {
+        return right(new NIR());
+    }
+
+    @Override
+    public String toString() {
+        return "";
+    }
+}
+
+class NIRProperties {
+    private Arbitrary<NIR> validNIR = Arbitrary.of(new NIR());
+
+    @Test
+    void roundTrip() {
+        Property.def("parseNIR(nir.ToString()) == nir")
+                .forAll(validNIR)
+                .suchThat(nir -> NIR.parse(nir.toString()).contains(nir))
+                .check()
+                .assertIsSatisfied();
+    }
+}
+```
+
+:large_blue_circle: Create the `Sex` type: parser and generator
