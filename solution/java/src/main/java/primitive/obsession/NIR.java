@@ -17,7 +17,8 @@ public class NIR {
                 && validateSex(potentialNIR.charAt(0))
                 && validateYear(potentialNIR.substring(1, 3))
                 && validateMonth(potentialNIR.substring(3, 5))
-                && validateDepartment(potentialNIR.substring(5, 7));
+                && validateDepartment(potentialNIR.substring(5, 7))
+                && validateCity(potentialNIR.substring(7, 10));
     }
 
     private static boolean validateLength(String potentialNIR) {
@@ -29,7 +30,7 @@ public class NIR {
     }
 
     private static boolean validateYear(String year) {
-        return isANumber(year);
+        return year.isANumber();
     }
 
     private static boolean validateMonth(String month) {
@@ -40,14 +41,14 @@ public class NIR {
         return validateNumber(department, x -> x > 0 && (x <= 95 || x == 99));
     }
 
+    private static boolean validateCity(String city) {
+        return city.isANumber();
+    }
+
     private static boolean validateNumber(String potentialNumber, Function<Integer, Boolean> isValid) {
         return potentialNumber
                 .toInt()
                 .map(isValid)
                 .getOrElse(false);
-    }
-
-    private static boolean isANumber(String potentialNumber) {
-        return potentialNumber.matches("[0-9.]+");
     }
 }

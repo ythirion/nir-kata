@@ -14,7 +14,7 @@ public class StringExtensions {
                 : none();
     }
 
-    private static boolean isANumber(String str) {
+    public static boolean isANumber(String str) {
         return str != null && str.matches("[0-9.]+");
     }
 }
