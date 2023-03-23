@@ -3,11 +3,15 @@ package parse.dont.validate;
 import io.vavr.control.Either;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.ExtensionMethod;
+import primitive.obsession.StringExtensions;
 
+import static java.lang.String.format;
 import static parse.dont.validate.Sex.parseSex;
 
 @EqualsAndHashCode
 @AllArgsConstructor
+@ExtensionMethod(StringExtensions.class)
 public class NIR {
     private final Sex sex;
     private final Year year;
@@ -16,7 +20,20 @@ public class NIR {
     private final City city;
     private final SerialNumber serialNumber;
 
+    private int key() {
+        return stringWithoutKey()
+                .toLong()
+                .map(x -> (97L - x % 97L))
+                .map(Long::intValue)
+                .get();
+    }
+
     public static Either<ParsingError, NIR> parseNIR(String input) {
+        return parseSafely(input)
+                .flatMap(nir -> checkKey(input.substring(13), nir));
+    }
+
+    private static Either<ParsingError, NIR> parseSafely(String input) {
         return parseSex(input.charAt(0))
                 .map(NIRBuilder::new)
                 .flatMap(builder -> parseYear(input.substring(1, 3), builder))
@@ -24,6 +41,7 @@ public class NIR {
                 .flatMap(builder -> parseDepartment(input.substring(5, 7), builder))
                 .flatMap(builder -> parseCity(input.substring(7, 10), builder))
                 .flatMap(builder -> parseSerialNumber(input.substring(10, 13), builder))
+                .flatMap(builder -> parseKey(input.substring(13, 15), builder))
                 .map(builder ->
                         new NIR(
                                 builder.getSex(),
@@ -56,8 +74,25 @@ public class NIR {
         return SerialNumber.parseSerialNumber(input).map(builder::withSerialNumber);
     }
 
+    private static Either<ParsingError, NIRBuilder> parseKey(String input, NIRBuilder builder) {
+        return input.toInt()
+                .map(builder::withKey)
+                .toEither(new ParsingError("not a valid number for the key"));
+    }
+
+    private static Either<ParsingError, NIR> checkKey(String input, NIR nir) {
+        return input.toInt()
+                .filter(parsedKey -> nir.key() == parsedKey)
+                .map(x -> nir)
+                .toEither(new ParsingError("invalid key"));
+    }
+
     @Override
     public String toString() {
+        return stringWithoutKey() + format("%02d", key());
+    }
+
+    private String stringWithoutKey() {
         return sex.toString() + year + month + department + city + serialNumber;
     }
 }

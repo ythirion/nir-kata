@@ -14,6 +14,7 @@ public class NIRBuilder {
     private Department department;
     private City city;
     private SerialNumber serialNumber;
+    private int key;
 
     public NIRBuilder(Sex sex) {
         this.sex = sex;
