@@ -7,8 +7,9 @@ public class NIR {
     public static Boolean validate(String potentialNIR) {
         return validateLength(potentialNIR)
                 && validateSex(potentialNIR.charAt(0))
-                && validateYear(potentialNIR.substring(1, 2))
-                && validateMonth(potentialNIR.substring(3, 5));
+                && validateYear(potentialNIR.substring(1, 3))
+                && validateMonth(potentialNIR.substring(3, 5))
+                && validateDepartment(potentialNIR.substring(5, 7));
     }
 
     private static boolean validateLength(String potentialNIR) {
@@ -30,6 +31,17 @@ public class NIR {
 
         var parsedMonth = Integer.parseInt(month);
         return parsedMonth > 0 && parsedMonth <= 12;
+    }
+
+    private static boolean validateDepartment(String department) {
+        if (!isANumber(department)) {
+            return false;
+        }
+
+        var parsedDepartment = Integer.parseInt(department);
+        return parsedDepartment > 0
+                && parsedDepartment <= 95
+                || parsedDepartment == 99;
     }
 
     private static boolean isANumber(String potentialNumber) {

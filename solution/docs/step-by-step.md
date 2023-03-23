@@ -230,7 +230,7 @@ I choose to use Regex to check whether `Year is a valid number or not`.
 ```java
 private static boolean validateYear(String potentialNIR) {
 	return potentialNIR
-			.substring(1, 2)
+			.substring(1, 3)
 			.matches("[0-9.]+");
 }
 ```
@@ -244,7 +244,7 @@ public class NIR {
 	public static Boolean validate(String potentialNIR) {
 		return validateLength(potentialNIR)
 				&& validateSex(potentialNIR.charAt(0))
-				&& validateYear(potentialNIR.substring(1, 2));
+				&& validateYear(potentialNIR.substring(1, 3));
 	}
 
 	private static boolean validateLength(String potentialNIR) {
@@ -299,7 +299,7 @@ Invalid NIRs
 ✅ 223ab5935012322 // incorrect month
 ✅ 223145935012322 // incorrect month 2
 ✅ 223005935012322 // incorrect month 3
-- 22311xx35012322 // incorrect department
+✅ 22311xx35012322 // incorrect department
 - 223119635012322 // incorrect department 2
 - 2231159zzz12322 // incorrect city
 - 223115935012321 // incorrect control key
