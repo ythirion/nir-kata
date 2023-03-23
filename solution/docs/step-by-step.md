@@ -63,7 +63,7 @@ public class NIR {
 }
 ```
 
-### Continue with invalid NIRs
+### Too short String
 :red_circle: Add a second test case for too short `String`.
 
 ```java
@@ -93,6 +93,74 @@ public class NIR {
     }
 }
 ```
+
+Our test list is now looking like this:
+```text
+Invalid NIRs
+✅empty string
+✅ 2230 // too short
+- 323115935012322 // incorrect sex
+- 2ab115935012322 // incorrect year
+- 223ab5935012322 // incorrect month
+- 223145935012322 // incorrect month 2
+- 223005935012322 // incorrect month 3
+- 22311xx35012322 // incorrect department
+- 223119635012322 // incorrect department 2
+- 2231159zzz12322 // incorrect city
+- 223115935012321 // incorrect control key
+- 2231159350123221 // too long
+
+Valid NIRs
+- 223115935012322
+- 200029923123486
+- 254031088723464
+- 195017262676215
+- 155053933981739
+- 106099955391094
+```
+
+### Incorrect Sex
+:red_circle: Let's add a new expectation from our tests.
+```java
+@Test
+void validate_with_invalid_sex_should_return_false() {
+	assertThat(NIR.validate("323115935012322"))
+			.isFalse();
+}
+```
+
+:green_circle: Express sex validation.
+```java
+public static Boolean validate(String potentialNIR) {
+	return potentialNIR.length() == VALID_LENGTH
+			&& (potentialNIR.charAt(0) == '1' || potentialNIR.charAt(0) == '2');
+}
+```
+
+:large_blue_circle: Extract named method for better comprehension.
+```java
+public class NIR {
+    private static final int VALID_LENGTH = 15;
+
+    public static Boolean validate(String potentialNIR) {
+        return validateLength(potentialNIR)
+                && validateSex(potentialNIR);
+    }
+
+    private static boolean validateLength(String potentialNIR) {
+        return potentialNIR.length() == VALID_LENGTH;
+    }
+
+    private static boolean validateSex(String potentialNIR) {
+        return potentialNIR.charAt(0) == '1' || potentialNIR.charAt(0) == '2';
+    }
+}
+```
+
+In refactoring stage, you should always wonder how to improve test code as well.
+Here we could use parameterized tests instead of maintaining 1 test method per "test case".
+
+
 
 :green_circle:
 :red_circle: 

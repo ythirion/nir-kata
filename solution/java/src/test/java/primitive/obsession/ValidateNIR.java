@@ -16,4 +16,10 @@ class ValidateNIR {
         assertThat(NIR.validate("2230"))
                 .isFalse();
     }
+
+    @Test
+    void validate_with_invalid_sex_should_return_false() {
+        assertThat(NIR.validate("323115935012322"))
+                .isFalse();
+    }
 }
