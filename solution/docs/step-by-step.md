@@ -314,6 +314,58 @@ Valid NIRs
 - 106099955391094
 ```
 
+Here are some interesting stuff made during the implementation.
+- Use `lombok` to define `Extension methods` on `String`
+- Use `vavr` to use a more functional and less imperative way of coding
+
+```java
+@UtilityClass
+public class StringExtensions {
+    // Extension methods are static methods with at least 1 parameter
+	// The first parameter type is the one we extend
+    public static Option<Integer> toInt(String potentialNumber) {
+        return isANumber(potentialNumber) // Use Option<Integer> -> equivalent to Optional since java 8
+                ? some(Integer.parseInt(potentialNumber))
+                : none();
+    }
+
+    private static boolean isANumber(String str) {
+        return str != null && str.matches("[0-9.]+");
+    }
+}
+```
+
+- Use `String` extension methods from our production code
+
+```java
+@UtilityClass
+// Reference extension classes
+@ExtensionMethod(StringExtensions.class)
+public class NIR {
+	...
+
+    private static boolean validateMonth(String month) {
+        return validateNumber(month, x -> x > 0 && x <= 12);
+    }
+
+    private static boolean validateDepartment(String department) {
+        return validateNumber(department, x -> x > 0 && (x <= 95 || x == 99));
+    }
+
+    // A generic method that parses a String then apply a validation function on it to check whether the value ensures it
+	// Here is its signature: String -> (int -> bool) -> bool  
+    private static boolean validateNumber(String potentialNumber, Function<Integer, Boolean> isValid) {
+        return potentialNumber
+                .toInt() // return an Option<Integer> (Some if something or None)
+                .map(isValid) // called only if Some
+                .getOrElse(false); // if none returns false
+    }
+
+    private static boolean isANumber(String potentialNumber) {
+        return potentialNumber.matches("[0-9.]+");
+    }
+}
+```
 
 Faire 2 schémas :
 - Primitive Obsession : 
