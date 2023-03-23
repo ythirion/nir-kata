@@ -3,16 +3,23 @@ package parse.dont.validate;
 import io.vavr.control.Either;
 import lombok.EqualsAndHashCode;
 
-import static io.vavr.control.Either.right;
+import static parse.dont.validate.Sex.parseSex;
 
 @EqualsAndHashCode
 public class NIR {
-    public static Either<ParseError, NIR> parse(String input) {
-        return right(new NIR());
+    private final Sex sex;
+
+    public NIR(Sex sex) {
+        this.sex = sex;
+    }
+
+    public static Either<ParsingError, NIR> parseNIR(String input) {
+        return parseSex(input.charAt(0))
+                .map(NIR::new);
     }
 
     @Override
     public String toString() {
-        return "";
+        return sex.toString();
     }
 }

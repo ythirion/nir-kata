@@ -459,7 +459,7 @@ Know more about `Primitive Obsession` [here](https://xtrem-tdd.netlify.app/Flavo
 
 ## 2) Fight Primitive Obsession
 Let's apply ["Parse Don't Validate"](https://xtrem-tdd.netlify.app/Flavours/parse-dont-validate) principle to fight ["Primitive Obsession"](https://xtrem-tdd.netlify.app/Flavours/no-primitive-types).
-We will use [`Property Based Testing`](https://xtrem-tdd.netlify.app/Flavours/pbt) in this part of the kata to design our parser with `vavr
+We will use [`Property Based Testing`](https://xtrem-tdd.netlify.app/Flavours/pbt) in this part of the kata to design our parser.
 
 Our `parsing function` must respect the below property
 ```text
@@ -467,7 +467,7 @@ for all (validNir)
 parseNIR(nir.toString) == nir
 ```
 
-With `parse don't validate` we want to make it impossible to represent an invalid `NIR` in our system:
+With `parse don't validate` we want to make it impossible to represent an invalid `NIR` in our system. Our data structures need to be `immutables`.
 
 Our parser may look like this: `String -> Either<ParsingError, NIR>`
 
@@ -521,13 +521,89 @@ class NIRProperties {
 
     @Test
     void roundTrip() {
-        Property.def("parseNIR(nir.ToString()) == nir")
-                .forAll(validNIR)
-                .suchThat(nir -> NIR.parse(nir.toString()).contains(nir))
+        Property.def("parseNIR(nir.ToString()) == nir") // describe the property
+                .forAll(validNIR) // pass an Arbitrary / Generator to generate valid NIRs
+                .suchThat(nir -> NIR.parse(nir.toString()).contains(nir)) // describe the Property predicate
                 .check()
                 .assertIsSatisfied();
     }
 }
 ```
 
-:large_blue_circle: Create the `Sex` type: parser and generator
+### Type-Driven Development
+- Create the `Sex` type
+  - We choose to use an `enum` for that
+  - It is immutable by design
+  - We need to work on the `String` representation of it
+  - Each data structure will contain its own parsing method
+
+```java
+public enum Sex {
+    M(1), F(2);
+
+    private final int value;
+
+    Sex(int value) {
+        this.value = value;
+    }
+
+    public static Either<ParseError, Sex> parseSex(char input) {
+        // vavr Pattern matching
+        return Match(input).of(
+                Case($('1'), right(M)),
+                Case($('2'), right(F)),
+                Case($(), left((new ParseError("Not a valid sex"))))
+        );
+    }
+
+    @Override
+    public String toString() {
+        return "" + value;
+    }
+}
+```
+
+- Create a generator to be able to generate valid NIRs
+
+```java
+private final Gen<Sex> sexGenerator = Gen.choose(Sex.values());
+```
+
+- Extend `NIR` with the new created type
+
+```java
+@EqualsAndHashCode
+public class NIR {
+    private final Sex sex;
+
+    public NIR(Sex sex) {
+        this.sex = sex;
+    }
+
+    public static Either<ParsingError, NIR> parseNIR(String input) {
+        return parseSex(input.charAt(0))
+                .map(NIR::new);
+    }
+
+    @Override
+    public String toString() {
+        return sex.toString();
+    }
+}
+
+class NIRProperties {
+    private final Gen<Sex> sexGenerator = Gen.choose(Sex.values());
+    private final Arbitrary<NIR> validNIR =
+            sexGenerator.map(NIR::new)
+                    .arbitrary();
+
+    @Test
+    void roundTrip() {
+        Property.def("parseNIR(nir.ToString()) == nir")
+                .forAll(validNIR)
+                .suchThat(nir -> NIR.parseNIR(nir.toString()).contains(nir))
+                .check()
+                .assertIsSatisfied();
+    }
+}
+```
