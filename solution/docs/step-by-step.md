@@ -754,3 +754,4 @@ We can check `Properties` generation by printing the generated nirs:
 275
 ```
 
+### Fast Forward the design of other types

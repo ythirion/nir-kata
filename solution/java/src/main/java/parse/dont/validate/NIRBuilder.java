@@ -10,6 +10,7 @@ import lombok.With;
 public class NIRBuilder {
     private final Sex sex;
     private Year year;
+    private Month month;
 
     public NIRBuilder(Sex sex) {
         this.sex = sex;

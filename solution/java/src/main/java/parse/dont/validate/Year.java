@@ -14,8 +14,8 @@ public class Year {
         this.value = value;
     }
 
-    public static Either<ParsingError, Year> parseYear(String input) {
-        return input.toInt()
+    public static Either<ParsingError, Year> parseYear(String potentialYear) {
+        return potentialYear.toInt()
                 .map(Year::new)
                 .toEither(new ParsingError("year should be between 0 and 99"));
     }
