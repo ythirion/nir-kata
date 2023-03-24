@@ -1039,5 +1039,5 @@ class MutatedProperties {
 ## Let's conclude
 ![Parsing](img/nir-parse.png)
 
-By using this approach you can mix T.D.D with Type Driven Development, Property-Based Testing and Mutators to design extremely robust code.
+By using this approach you can mix `T.D.D` with `Type Driven Development`, `Property-Based Testing` and `Mutations` to design extremely robust code.
 Indeed, it can help you quickly identify edge cases in your system.
