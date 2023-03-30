@@ -2,7 +2,7 @@ using LanguageExt;
 
 namespace Nir_Kata.Parse.Dont.Validate
 {
-    public readonly struct Department
+    public readonly struct Department : IEquatable<Department>
     {
         private readonly int _value;
 
@@ -19,5 +19,15 @@ namespace Nir_Kata.Parse.Dont.Validate
                 .Match(x => new Department(x), Option<Department>.None);
 
         public override string ToString() => _value.ToString("D2");
+
+        public bool Equals(Department other) => _value == other._value;
+
+        public override bool Equals(object? obj) => obj is Department other && Equals(other);
+
+        public override int GetHashCode() => _value;
+
+        public static bool operator ==(Department left, Department right) => left.Equals(right);
+
+        public static bool operator !=(Department left, Department right) => !(left == right);
     }
 }

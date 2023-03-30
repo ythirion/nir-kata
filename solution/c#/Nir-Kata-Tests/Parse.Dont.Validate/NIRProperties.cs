@@ -10,7 +10,7 @@ namespace Nir_Kata_Tests.Parse.Dont.Validate
         [Property(Arbitrary = new[] {typeof(NIRGenerator)})]
         public Property RoundTripNIR(NIR nir) =>
             ParseNIR(nir.ToString())
-                .IsSome
+                .Contains(nir)
                 .ToProperty();
     }
 }

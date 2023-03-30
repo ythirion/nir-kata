@@ -2,7 +2,7 @@ using LanguageExt;
 
 namespace Nir_Kata.Parse.Dont.Validate
 {
-    public readonly struct Year
+    public readonly struct Year : IEquatable<Year>
     {
         private readonly int _value;
 
@@ -19,5 +19,15 @@ namespace Nir_Kata.Parse.Dont.Validate
                 .Match(x => new Year(x), Option<Year>.None);
 
         public override string ToString() => _value.ToString("D2");
+
+        public bool Equals(Year other) => _value == other._value;
+
+        public override bool Equals(object? obj) => obj is Year other && Equals(other);
+
+        public override int GetHashCode() => _value;
+
+        public static bool operator ==(Year left, Year right) => left.Equals(right);
+
+        public static bool operator !=(Year left, Year right) => !(left == right);
     }
 }

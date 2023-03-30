@@ -3,7 +3,7 @@ using LanguageExt.UnsafeValueAccess;
 
 namespace Nir_Kata.Parse.Dont.Validate
 {
-    public readonly struct NIR
+    public readonly struct NIR : IEquatable<NIR>
     {
         private const int ValidLength = 15;
 
@@ -52,5 +52,18 @@ namespace Nir_Kata.Parse.Dont.Validate
 
         private string ToStringWithoutKey() =>
             _sex.ToString("D") + _year + _month.ToIntString() + _department + _city + _serialNumber;
+
+        public bool Equals(NIR other) => _sex == other._sex && _year.Equals(other._year) && _month == other._month &&
+                                         _department.Equals(other._department) && _city.Equals(other._city) &&
+                                         _serialNumber.Equals(other._serialNumber);
+
+        public override bool Equals(object? obj) => obj is NIR other && Equals(other);
+
+        public override int GetHashCode()
+            => HashCode.Combine((int) _sex, _year, (int) _month, _department, _city, _serialNumber);
+
+        public static bool operator ==(NIR left, NIR right) => left.Equals(right);
+
+        public static bool operator !=(NIR left, NIR right) => !(left == right);
     }
 }

@@ -2,8 +2,7 @@ using LanguageExt;
 
 namespace Nir_Kata.Parse.Dont.Validate
 {
-    public class SerialNumber
-
+    public readonly struct SerialNumber : IEquatable<SerialNumber>
     {
         private readonly int _value;
 
@@ -20,5 +19,15 @@ namespace Nir_Kata.Parse.Dont.Validate
                 .Match(x => new SerialNumber(x), Option<SerialNumber>.None);
 
         public override string ToString() => _value.ToString("D3");
+
+        public bool Equals(SerialNumber other) => _value == other._value;
+
+        public override bool Equals(object? obj) => obj is SerialNumber other && Equals(other);
+
+        public override int GetHashCode() => _value;
+
+        public static bool operator ==(SerialNumber left, SerialNumber right) => left.Equals(right);
+
+        public static bool operator !=(SerialNumber left, SerialNumber right) => !(left == right);
     }
 }
