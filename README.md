@@ -1,6 +1,21 @@
 # NIR kata
 > Write a system that can handle `NIR` (simplified rules explained below)
 
+In this hands-on session we will develop together a system that can handle NIR "French social security number" by using / experimenting the following practices:
+- `Test-Driven Development` to design a first version of our algorithm (with Example Based approach)
+- `Fight Primitive Obsession` with `Parse Don't Validate` and `Monads`
+- `Type-Driven Development` to "make impossible states unrepresentable"
+- `Property-Based Testing` to drive our development
+- `Mutation-Based Properties` to refine our code and identify edge cases
+
+At the end of this code kata you will have understood a different way of designing code that may / will inspire you for your day-to-day life.
+
+It will be a guided session, so no need to be an expert to join us.
+Feel free to come and learn by mobing with us 👍
+
+Code is available in `java` and `C#` (#sharingiscaring)
+Original kata idea from Arnaud Bailly, thanks for that 😉.
+
 ## 1) Validate a NIR
 - Design a system that can validate if a given `String` is a valid `NIR` number: `String -> Boolean`
 - Use Test Driven Development to do so
