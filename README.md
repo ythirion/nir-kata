@@ -1,4 +1,4 @@
-# NIR kata
+# Bulletproof your code with "Mutation-Based Property-Driven Development"
 > Write a system that can handle `NIR` (simplified rules explained below)
 
 In this hands-on session we will develop together a system that can handle NIR "French social security number" by using / experimenting the following practices:
@@ -120,6 +120,9 @@ Proposal of solutions are available in the `solution` directory:
 - `kotlin` with `kotest`
 
 A step-by-step guide in `java` is available [here](solution/docs/step-by-step.md)
+
+## To go further
+I have created another kata to practice those ideas called `snafu` it is available [here](https://github.com/ythirion/snafu-kata).
 
 ## Resources
 - [NIR full specification](https://fr.wikipedia.org/wiki/Num%C3%A9ro_de_s%C3%A9curit%C3%A9_sociale_en_France)
