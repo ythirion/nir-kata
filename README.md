@@ -1,7 +1,7 @@
 # Bulletproof your code with "Mutation-Based Property-Driven Development"
 > Write a system that can handle `NIR` (simplified rules explained below)
 
-![Bulletproof your code](img/bulletproof-your-code.png)
+![Bulletproof your code](img/bulletproof-your-code.webp)
 
 In this hands-on session we will develop together a system that can handle NIR "French social security number" by using / experimenting the following practices:
 - `Test-Driven Development` to design a first version of our algorithm (with Example Based approach)
