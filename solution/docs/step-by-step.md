@@ -44,7 +44,7 @@ class ValidateNIR {
 Our code is not compiling.
 ![Compile error is a failing test](img/first-failing-test.png)
 
-:green_circle: Make it `green` as fast as possible by [generating production code from usage](https://xtrem-tdd.netlify.app/Flavours/generate-code-from-usage).
+:green_circle: Make it `green` as fast as possible by [generating production code from usage](https://xtrem-tdd.netlify.app/Flavours/Design/generate-code-from-usage).
 
 ```java
 public class NIR {
@@ -455,11 +455,11 @@ Valid NIRs
 ### Limit of this approach
 ![Limit of primitive types](img/nir-primitive.png)
 
-Know more about `Primitive Obsession` [here](https://xtrem-tdd.netlify.app/Flavours/no-primitive-types)
+Know more about `Primitive Obsession` [here](https://xtrem-tdd.netlify.app/Flavours/Design/no-primitive-types)
 
 ## 2) Fight Primitive Obsession
-Let's apply ["Parse Don't Validate"](https://xtrem-tdd.netlify.app/Flavours/parse-dont-validate) principle to fight ["Primitive Obsession"](https://xtrem-tdd.netlify.app/Flavours/no-primitive-types).
-We will use [`Property Based Testing`](https://xtrem-tdd.netlify.app/Flavours/pbt) in this part of the kata to design our parser.
+Let's apply ["Parse Don't Validate"](https://xtrem-tdd.netlify.app/Flavours/Design/parse-dont-validate) principle to fight ["Primitive Obsession"](https://xtrem-tdd.netlify.app/Flavours/no-primitive-types).
+We will use [`Property Based Testing`](https://xtrem-tdd.netlify.app/Flavours/Testing/pbt) in this part of the kata to design our parser.
 
 Our `parsing function` must respect the below property
 ```text

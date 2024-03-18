@@ -24,7 +24,7 @@ Original kata idea from Arnaud Bailly, thanks for that 😉.
 
 
 ## 2) Fight Primitive Obsession
-- You must apply ["Parse Don't Validate"](https://xtrem-tdd.netlify.app/Flavours/parse-dont-validate) principle to fight ["Primitive Obsession"](https://xtrem-tdd.netlify.app/Flavours/no-primitive-types)
+- You must apply ["Parse Don't Validate"](https://xtrem-tdd.netlify.app/Flavours/Design/parse-dont-validate) principle to fight ["Primitive Obsession"](https://xtrem-tdd.netlify.app/Flavours/no-primitive-types)
 - Your `parsing function` must respect the below property
 ```text
 for all (validNir)
